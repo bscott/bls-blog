@@ -1,0 +1,43 @@
+---
+// Footer component with minimal design
+const currentYear = new Date().getFullYear();
+---
+
+<footer>
+  <hr />
+  <p>
+    <a href="/rss.xml">[rss]</a>
+  </p>
+  <p>&copy; {currentYear}</p>
+</footer>
+
+<style>
+  footer {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  footer hr {
+    margin-bottom: var(--space-lg);
+  }
+
+  footer p {
+    margin-bottom: 0.5rem;
+  }
+
+  footer a {
+    font-family: var(--font-mono);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  footer a:visited {
+    color: var(--color-text);
+  }
+</style>

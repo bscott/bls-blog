@@ -1,15 +1,28 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 
-// Get all blog posts, sort by date, filter out drafts
-const allPosts = await getCollection('blog', ({ data }) => {
-  return data.draft !== true;
-});
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.draft !== true;
+  });
 
-const posts = allPosts
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 5); // Show 5 most recent posts
+  // Get all unique tags
+  const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))];
+
+  return allTags.map(tag => {
+    const filteredPosts = allPosts
+      .filter(post => post.data.tags.includes(tag))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+    return {
+      params: { tag },
+      props: { posts: filteredPosts, tag },
+    };
+  });
+}
+
+const { posts, tag } = Astro.props;
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
@@ -21,34 +34,37 @@ function formatDate(date: Date): string {
 ---
 
 <BaseLayout
-  title="bscott blog"
-  description="A minimalist blog with a retro-web aesthetic"
+  title={`Posts tagged "${tag}"`}
+  description={`All blog posts tagged with ${tag}`}
 >
-  <section class="intro">
-    <h1>bscott blog</h1>
-    <p>Welcome to my blog. A minimalist space for thoughts, code, and ideas.</p>
-  </section>
+  <div class="tag-header">
+    <h1>Posts tagged: <span class="tag-name">[{tag}]</span></h1>
+    <p>
+      <a href="/blog">[← back to all posts]</a>
+    </p>
+  </div>
 
-  <section class="recent-posts">
-    <h2>Recent Posts</h2>
+  <section class="posts-section">
     {posts.length === 0 ? (
-      <p>No posts yet. Check back soon!</p>
+      <p>No posts with this tag yet.</p>
     ) : (
       <ul class="post-list">
         {posts.map(post => (
           <li>
             <article>
-              <h3>
+              <h2>
                 <a href={`/blog/${post.slug}`}>{post.data.title}</a>
-              </h3>
+              </h2>
               <time datetime={post.data.pubDate.toISOString()}>
                 {formatDate(post.data.pubDate)}
               </time>
               <p>{post.data.description}</p>
               {post.data.tags.length > 0 && (
                 <div class="tags">
-                  {post.data.tags.map(tag => (
-                    <a href={`/blog/tags/${tag}`} class="tag">[{tag}]</a>
+                  {post.data.tags.map(t => (
+                    <a href={`/blog/tags/${t}`} class="tag" class:list={[{ active: t === tag }]}>
+                      [{t}]
+                    </a>
                   ))}
                 </div>
               )}
@@ -57,24 +73,26 @@ function formatDate(date: Date): string {
         ))}
       </ul>
     )}
-    <p>
-      <a href="/blog">[view all posts →]</a>
-    </p>
   </section>
 </BaseLayout>
 
 <style>
-  .intro {
+  .tag-header {
     margin-bottom: var(--space-xl);
   }
 
-  .intro h1 {
+  .tag-header h1 {
     margin-top: 0;
+    margin-bottom: var(--space-sm);
   }
 
-  .recent-posts h2 {
-    margin-top: 0;
-    margin-bottom: var(--space-lg);
+  .tag-name {
+    font-family: var(--font-mono);
+    color: var(--color-link);
+  }
+
+  .tag-header p {
+    margin-bottom: 0;
   }
 
   .post-list {
@@ -91,9 +109,10 @@ function formatDate(date: Date): string {
     padding-bottom: var(--space-lg);
   }
 
-  .post-list h3 {
+  .post-list h2 {
     margin-top: 0;
     margin-bottom: 0.5rem;
+    font-size: var(--text-xl);
   }
 
   .post-list time {
@@ -130,5 +149,10 @@ function formatDate(date: Date): string {
 
   .tag:visited {
     color: var(--color-text);
+  }
+
+  .tag.active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
   }
 </style>

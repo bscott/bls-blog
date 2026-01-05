@@ -1,0 +1,85 @@
+---
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to only show h2 and h3 headings
+const tocHeadings = headings.filter(h => h.depth <= 3);
+---
+
+{tocHeadings.length > 1 && (
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ul>
+      {tocHeadings.map(heading => (
+        <li class={`toc-level-${heading.depth}`}>
+          <a href={`#${heading.slug}`}>[{heading.text}]</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .toc {
+    margin: var(--space-lg) 0;
+    padding: var(--space-md);
+    background-color: var(--color-code-bg);
+    border-left: 3px solid var(--color-border);
+  }
+
+  .toc h2 {
+    font-size: var(--text-base);
+    margin-top: 0;
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .toc li {
+    margin-bottom: 0.5rem;
+  }
+
+  .toc a {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .toc a:hover {
+    text-decoration: underline;
+  }
+
+  .toc a:visited {
+    color: var(--color-text);
+  }
+
+  .toc-level-2 {
+    padding-left: 0;
+  }
+
+  .toc-level-3 {
+    padding-left: var(--space-md);
+  }
+
+  @media (max-width: 640px) {
+    .toc {
+      padding: var(--space-sm);
+    }
+  }
+</style>

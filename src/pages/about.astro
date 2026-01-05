@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="About this blog and its author"
+>
+  <h1>About</h1>
+
+  <section>
+    <p>
+      Welcome to my blog. This is a minimalist space built with a retro-web aesthetic,
+      focusing on clean design, fast performance, and readable content.
+    </p>
+
+    <h2>About the Site</h2>
+    <p>
+      This blog is built with <a href="https://astro.build">Astro</a>, a modern static site generator
+      that prioritizes performance and developer experience. The design embraces simplicity with:
+    </p>
+    <ul>
+      <li>ASCII bracket notation navigation</li>
+      <li>Classic blue hyperlinks</li>
+      <li>System fonts (zero downloads)</li>
+      <li>Generous whitespace</li>
+      <li>High contrast for accessibility</li>
+    </ul>
+
+    <h2>Tech Stack</h2>
+    <ul>
+      <li><strong>Framework:</strong> Astro with TypeScript</li>
+      <li><strong>Styling:</strong> Vanilla CSS</li>
+      <li><strong>Content:</strong> Markdown/MDX with Content Collections</li>
+      <li><strong>Features:</strong> RSS feed, tag system, reading time, table of contents</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>
+      Feel free to reach out or subscribe via <a href="/rss.xml">RSS</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-top: 0;
+  }
+
+  section {
+    max-width: 65ch;
+  }
+
+  h2 {
+    margin-top: var(--space-xl);
+  }
+</style>

@@ -1,0 +1,46 @@
+---
+// Header component with ASCII bracket navigation
+---
+
+<header>
+  <nav>
+    <a href="/">[home]</a>
+    <a href="/blog">[blog]</a>
+    <a href="/about">[about]</a>
+  </nav>
+</header>
+
+<style>
+  header {
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-lg);
+  }
+
+  nav {
+    display: flex;
+    gap: var(--space-md);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  nav a:visited {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 640px) {
+    nav {
+      gap: var(--space-sm);
+    }
+  }
+</style>
