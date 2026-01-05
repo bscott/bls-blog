@@ -1,43 +1,103 @@
-# Astro Starter Kit: Minimal
+# bscott blog
 
-```sh
-npm create astro@latest -- --template minimal
+A minimalist blog built with Astro, embracing a retro-web aesthetic.
+
+## Features
+
+- ASCII bracket navigation `[home] [blog] [about]`
+- Classic blue/purple hyperlinks
+- System fonts (zero downloads)
+- High-contrast, accessible design
+- Content Collections with TypeScript
+- RSS feed support
+- Tag system for organizing posts
+- Reading time calculation
+- Table of contents for long posts
+- Responsive mobile-first design
+- Zero JavaScript by default
+
+## Tech Stack
+
+- **Framework:** Astro with TypeScript
+- **Styling:** Vanilla CSS
+- **Content:** Markdown/MDX with Content Collections
+- **Integrations:** MDX, RSS, Sitemap
+
+## Getting Started
+
+### Development
+
+Start the development server:
+
+```bash
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open http://localhost:4321 to view the site.
 
-## 🚀 Project Structure
+### Build
 
-Inside of your Astro project, you'll see the following folders and files:
+Build the site for production:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm run build
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+The static files will be generated in the `dist/` directory.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Preview
 
-Any static assets, like images, can be placed in the `public/` directory.
+Preview the production build:
 
-## 🧞 Commands
+```bash
+npm run preview
+```
 
-All commands are run from the root of the project, from a terminal:
+## Creating Blog Posts
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Create a new markdown file in `src/content/blog/`:
 
-## 👀 Want to learn more?
+```markdown
+---
+title: "Your Post Title"
+description: "A brief description"
+pubDate: 2025-12-17
+tags: ["tag1", "tag2"]
+draft: false
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Your content goes here...
+```
+
+## Customization
+
+### Site Title and Description
+
+Update in `src/layouts/BaseLayout.astro`:
+
+```typescript
+const siteTitle = 'bscott blog';
+```
+
+### Site URL
+
+Update in `astro.config.mjs`:
+
+```javascript
+export default defineConfig({
+  site: 'https://yourdomain.com',
+  // ...
+});
+```
+
+### Colors and Fonts
+
+Edit CSS variables in `src/styles/global.css`
+
+## Deployment
+
+Deploy to any static hosting platform (Netlify, Vercel, GitHub Pages, Cloudflare Pages)
+
+Build command: `npm run build`
+
+Publish directory: `dist`
