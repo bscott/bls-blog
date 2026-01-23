@@ -2,9 +2,55 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Search" description="Search blog posts">
-  <h1>Search</h1>
-  <div id="search"></div>
+<BaseLayout title="Item Lookup" description="Search blog posts">
+  <div class="search-screen">
+    <div class="screen-header">
+      <h1>ITEM LOOKUP</h1>
+      <span class="screen-subtitle">~ SEARCH THE ARCHIVES ~</span>
+    </div>
+
+    <div class="dialog-box search-panel">
+      <div class="search-header">
+        <span class="search-icon">[?]</span>
+        <span class="search-label">ENTER SEARCH QUERY</span>
+      </div>
+      <div class="search-container" id="search"></div>
+      <div class="search-hint">
+        <span class="hint-icon">!</span>
+        <span class="hint-text">Search quests by title, content, or tags</span>
+      </div>
+    </div>
+
+    <div class="search-tips dialog-box">
+      <h2 class="tips-title">SEARCH TIPS</h2>
+      <ul class="tips-list">
+        <li>
+          <span class="tip-icon">></span>
+          <span>Use keywords to find specific quests</span>
+        </li>
+        <li>
+          <span class="tip-icon">></span>
+          <span>Search by tag names (homelab, automation, etc.)</span>
+        </li>
+        <li>
+          <span class="tip-icon">></span>
+          <span>Results update as you type</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="quick-nav">
+      <p class="nav-label">QUICK NAVIGATION</p>
+      <nav class="nav-links">
+        <a href="/blog" class="nav-link">
+          <span class="menu-arrow">></span> VIEW ALL QUESTS
+        </a>
+        <a href="/" class="nav-link">
+          <span class="menu-arrow">></span> RETURN TO TOWN
+        </a>
+      </nav>
+    </div>
+  </div>
 </BaseLayout>
 
 <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
@@ -16,7 +62,254 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </script>
 
 <style>
-  h1 {
+  .search-screen {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .screen-header {
+    text-align: center;
     margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .screen-header h1 {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    color: var(--color-link);
+    margin: 0 0 var(--space-sm) 0;
+    letter-spacing: 2px;
+  }
+
+  .screen-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    letter-spacing: 3px;
+  }
+
+  /* Dialog Box - FF-style pixel border */
+  .dialog-box {
+    position: relative;
+    background: var(--color-code-bg);
+    padding: var(--space-md);
+    border: 3px solid var(--color-border);
+    box-shadow:
+      inset 2px 2px 0 0 rgba(255, 255, 255, 0.1),
+      inset -2px -2px 0 0 rgba(0, 0, 0, 0.1);
+    margin-bottom: var(--space-md);
+  }
+
+  .dialog-box::before,
+  .dialog-box::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--color-link);
+  }
+
+  .dialog-box::before {
+    top: -3px;
+    left: -3px;
+  }
+
+  .dialog-box::after {
+    bottom: -3px;
+    right: -3px;
+  }
+
+  /* Search Panel */
+  .search-panel {
+    padding: var(--space-lg);
+  }
+
+  .search-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px dashed var(--color-border);
+  }
+
+  .search-icon {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--color-link);
+  }
+
+  .search-label {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text);
+    letter-spacing: 1px;
+  }
+
+  .search-container {
+    margin: var(--space-md) 0;
+  }
+
+  .search-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-top: var(--space-md);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .hint-icon {
+    font-family: var(--font-mono);
+    color: var(--color-link);
+    font-weight: bold;
+  }
+
+  /* Search Tips */
+  .tips-title {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-link);
+    margin: 0 0 var(--space-md) 0;
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px dashed var(--color-border);
+    letter-spacing: 1px;
+  }
+
+  .tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tips-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  .tip-icon {
+    font-family: var(--font-mono);
+    color: var(--color-link);
+    font-weight: bold;
+  }
+
+  /* Quick Navigation */
+  .quick-nav {
+    text-align: center;
+    margin-top: var(--space-lg);
+  }
+
+  .nav-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    letter-spacing: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--color-link);
+  }
+
+  .menu-arrow {
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    transform: translateX(-8px);
+  }
+
+  .nav-link:hover .menu-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--color-link);
+  }
+
+  /* Pagefind UI Overrides */
+  :global(.pagefind-ui) {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--color-link);
+    --pagefind-ui-text: var(--color-text);
+    --pagefind-ui-background: var(--color-bg);
+    --pagefind-ui-border: var(--color-border);
+    --pagefind-ui-tag: var(--color-code-bg);
+    --pagefind-ui-border-width: 2px;
+    --pagefind-ui-border-radius: 0;
+    --pagefind-ui-font: var(--font-sans);
+  }
+
+  :global(.pagefind-ui__search-input) {
+    font-family: var(--font-mono) !important;
+    border: 2px solid var(--color-border) !important;
+    background: var(--color-bg) !important;
+  }
+
+  :global(.pagefind-ui__search-input:focus) {
+    border-color: var(--color-link) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--color-code-bg) !important;
+  }
+
+  :global(.pagefind-ui__result) {
+    border: 2px solid var(--color-border) !important;
+    padding: var(--space-md) !important;
+    background: var(--color-code-bg) !important;
+  }
+
+  :global(.pagefind-ui__result:hover) {
+    border-color: var(--color-link) !important;
+  }
+
+  :global(.pagefind-ui__result-link) {
+    font-family: var(--font-mono) !important;
+    font-size: 0.9rem !important;
+  }
+
+  :global(.pagefind-ui__result-excerpt) {
+    font-size: 0.85rem !important;
+  }
+
+  :global(.pagefind-ui__button) {
+    font-family: var(--font-mono) !important;
+    background: var(--color-code-bg) !important;
+    border: 2px solid var(--color-border) !important;
+    border-radius: 0 !important;
+  }
+
+  :global(.pagefind-ui__button:hover) {
+    border-color: var(--color-link) !important;
+  }
+
+  /* Dark mode adjustments */
+  @media (prefers-color-scheme: dark) {
+    .dialog-box {
+      box-shadow:
+        inset 2px 2px 0 0 rgba(255, 255, 255, 0.05),
+        inset -2px -2px 0 0 rgba(0, 0, 0, 0.2);
+    }
   }
 </style>

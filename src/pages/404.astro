@@ -3,57 +3,302 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Page Not Found"
-  description="The page you're looking for doesn't exist"
+  title="GAME OVER"
+  description="The quest you seek does not exist"
 >
-  <div class="error-page">
-    <h1>404</h1>
-    <p class="message">The page you're looking for doesn't exist.</p>
-    <p class="submessage">It may have been moved, deleted, or never existed in the first place.</p>
-    <nav class="error-nav">
-      <a href="/">[← home]</a>
-      <a href="/blog">[all posts →]</a>
-    </nav>
+  <div class="game-over-screen">
+    <div class="glitch-container">
+      <h1 class="error-code" data-text="404">404</h1>
+    </div>
+
+    <div class="dialog-box death-message">
+      <p class="game-over-text">GAME OVER</p>
+      <div class="skull-art">
+        <pre aria-hidden="true">
+    .-"""""-.
+   /         \
+  |  X     X  |
+  |     ^     |
+  |    '-'    |
+   \  '---'  /
+    '-------'
+        </pre>
+      </div>
+      <p class="death-reason">The quest you seek does not exist...</p>
+      <p class="death-hint">It may have been moved, deleted, or lost to the void.</p>
+    </div>
+
+    <div class="respawn-options">
+      <p class="respawn-prompt">CONTINUE? <span class="blink">_</span></p>
+      <nav class="respawn-nav">
+        <a href="/" class="respawn-link">
+          <span class="menu-arrow">></span> RETURN TO TOWN
+        </a>
+        <a href="/blog" class="respawn-link">
+          <span class="menu-arrow">></span> VIEW QUEST LOG
+        </a>
+        <a href="/search" class="respawn-link">
+          <span class="menu-arrow">></span> SEARCH ARCHIVES
+        </a>
+      </nav>
+    </div>
+
+    <div class="coin-prompt">
+      <span class="coin-text">INSERT COIN TO CONTINUE</span>
+      <span class="countdown">9</span>
+    </div>
   </div>
 </BaseLayout>
 
 <style>
-  .error-page {
+  .game-over-screen {
     text-align: center;
     padding: var(--space-xl) 0;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
-  h1 {
-    font-size: 6rem;
+  .glitch-container {
+    margin-bottom: var(--space-lg);
+  }
+
+  .error-code {
     font-family: var(--font-mono);
+    font-size: 8rem;
+    font-weight: 900;
     margin: 0;
     line-height: 1;
-    color: var(--color-text);
+    color: var(--color-link);
+    text-shadow:
+      4px 4px 0 var(--color-border),
+      -2px -2px 0 var(--color-border);
+    letter-spacing: 0.1em;
+    position: relative;
   }
 
-  .message {
-    font-size: var(--text-lg);
-    margin-top: var(--space-lg);
-    margin-bottom: var(--space-sm);
+  /* Pixel glitch effect on hover */
+  .error-code::before,
+  .error-code::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    right: 0;
+    opacity: 0;
   }
 
-  .submessage {
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-xl);
+  .error-code:hover::before {
+    animation: glitch-1 0.3s infinite;
+    color: #ff0000;
+    opacity: 0.8;
   }
 
-  .error-nav {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-lg);
+  .error-code:hover::after {
+    animation: glitch-2 0.3s infinite;
+    color: #00ff00;
+    opacity: 0.8;
+  }
+
+  @keyframes glitch-1 {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-3px, 3px); }
+    40% { transform: translate(3px, -3px); }
+    60% { transform: translate(-3px, -3px); }
+    80% { transform: translate(3px, 3px); }
+  }
+
+  @keyframes glitch-2 {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(3px, -3px); }
+    40% { transform: translate(-3px, 3px); }
+    60% { transform: translate(3px, 3px); }
+    80% { transform: translate(-3px, -3px); }
+  }
+
+  /* Dialog Box - FF-style pixel border */
+  .dialog-box {
+    position: relative;
+    background: var(--color-code-bg);
+    padding: var(--space-lg);
+    border: 3px solid var(--color-border);
+    box-shadow:
+      inset 2px 2px 0 0 rgba(255, 255, 255, 0.1),
+      inset -2px -2px 0 0 rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto var(--space-lg);
+  }
+
+  .dialog-box::before,
+  .dialog-box::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--color-link);
+  }
+
+  .dialog-box::before {
+    top: -3px;
+    left: -3px;
+  }
+
+  .dialog-box::after {
+    bottom: -3px;
+    right: -3px;
+  }
+
+  .game-over-text {
     font-family: var(--font-mono);
+    font-size: 1.5rem;
+    color: #cc0000;
+    margin: 0 0 var(--space-md) 0;
+    letter-spacing: 4px;
+    animation: pulse 1s ease-in-out infinite;
   }
 
-  .error-nav a {
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .skull-art {
+    margin: var(--space-md) 0;
+  }
+
+  .skull-art pre {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    line-height: 1.2;
+    color: var(--color-text-muted);
+    margin: 0;
+    display: inline-block;
+    text-align: left;
+  }
+
+  .death-reason {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text);
+    margin: var(--space-md) 0 var(--space-sm) 0;
+  }
+
+  .death-hint {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .respawn-options {
+    margin: var(--space-lg) 0;
+  }
+
+  .respawn-prompt {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    letter-spacing: 2px;
+  }
+
+  .blink {
+    animation: blink 1s steps(2) infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .respawn-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .respawn-link {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text);
     text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+    position: relative;
   }
 
-  .error-nav a:hover {
-    text-decoration: underline;
+  .respawn-link:hover {
+    color: var(--color-link);
+  }
+
+  .menu-arrow {
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    transform: translateX(-8px);
+  }
+
+  .respawn-link:hover .menu-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--color-link);
+    animation: arrow-blink 0.5s steps(2) infinite;
+  }
+
+  @keyframes arrow-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .coin-prompt {
+    margin-top: var(--space-xl);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    letter-spacing: 1px;
+  }
+
+  .coin-text {
+    display: block;
+    margin-bottom: 0.5rem;
+    animation: flash 2s ease-in-out infinite;
+  }
+
+  @keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .countdown {
+    font-size: 1.5rem;
+    color: var(--color-link);
+  }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    .error-code {
+      font-size: 5rem;
+    }
+
+    .skull-art pre {
+      font-size: 0.5rem;
+    }
+  }
+
+  /* Dark mode adjustments */
+  @media (prefers-color-scheme: dark) {
+    .dialog-box {
+      box-shadow:
+        inset 2px 2px 0 0 rgba(255, 255, 255, 0.05),
+        inset -2px -2px 0 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .game-over-text {
+      color: #ff4444;
+    }
   }
 </style>

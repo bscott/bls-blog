@@ -24,6 +24,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonicalURL} />
 
+    <!-- Pixel Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={fullTitle} />
@@ -39,10 +44,31 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <title>{fullTitle}</title>
   </head>
   <body>
+    <!-- Reading Progress Bar (XP style) -->
+    <div class="progress-bar">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+
     <Header />
     <main>
       <slot />
     </main>
     <Footer />
+
+    <!-- Reading progress script -->
+    <script>
+      function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        const progressFill = document.getElementById('progress-fill');
+        if (progressFill) {
+          progressFill.style.width = `${Math.min(progress, 100)}%`;
+        }
+      }
+
+      window.addEventListener('scroll', updateProgress);
+      window.addEventListener('load', updateProgress);
+    </script>
   </body>
 </html>

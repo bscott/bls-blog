@@ -19,52 +19,62 @@ const { title, description, pubDate, updatedDate, tags, headings, body, slug } =
 
 const readingTime = getReadingTime(body);
 
+// Extract just the number from reading time (e.g., "5 min read" -> "5")
+const readingMinutes = readingTime.replace(/[^0-9]/g, '');
+
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+    month: 'short',
+    day: '2-digit'
+  }).toUpperCase();
 }
 ---
 
 <BaseLayout title={title} description={description} ogType="article">
   <article class="blog-post">
-    <header class="post-header">
-      <h1>{title}</h1>
-      <div class="post-meta">
-        <time datetime={pubDate.toISOString()}>
-          {formatDate(pubDate)}
-        </time>
-        {updatedDate && (
-          <span class="updated">
-            (Updated: <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time>)
+    <div class="dialog-box post-container">
+      <header class="post-header">
+        <h1 class="post-title">{title}</h1>
+        <div class="post-meta">
+          <span class="quest-duration">DURATION: {readingMinutes} MIN</span>
+          <span class="quest-date">
+            <time datetime={pubDate.toISOString()}>
+              {formatDate(pubDate)}
+            </time>
           </span>
-        )}
-        <span class="reading-time">• {readingTime}</span>
-      </div>
-      {tags.length > 0 && (
-        <div class="post-tags">
-          {tags.map(tag => (
-            <a href={`/blog/tags/${tag}`} class="tag">[{tag}]</a>
-          ))}
+          {updatedDate && (
+            <span class="quest-updated">
+              UPDATED: <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time>
+            </span>
+          )}
         </div>
+        {tags.length > 0 && (
+          <div class="post-tags">
+            {tags.map(tag => (
+              <a href={`/blog/tags/${tag}`} class="tag">{tag}</a>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <TableOfContents headings={headings} />
+
+      <div class="post-content">
+        <slot />
+      </div>
+
+      {tags.length > 0 && (
+        <footer class="post-footer">
+          <p class="tagged-with">TAGGED WITH:</p>
+          <div class="footer-tags">
+            {tags.map(tag => (
+              <a href={`/blog/tags/${tag}`} class="tag">{tag}</a>
+            ))}
+          </div>
+        </footer>
       )}
-    </header>
-
-    <TableOfContents headings={headings} />
-
-    <div class="post-content">
-      <slot />
     </div>
-
-    {tags.length > 0 && (
-      <footer class="post-footer">
-        <p>Tagged with: {tags.map(tag => (
-          <a href={`/blog/tags/${tag}`}>[{tag}]</a>
-        )).reduce((prev, curr) => [prev, ', ', curr] as any)}</p>
-      </footer>
-    )}
 
     {tags.length > 0 && (
       <RelatedPosts currentSlug={slug} tags={tags} />
@@ -77,77 +87,156 @@ function formatDate(date: Date): string {
     margin-bottom: var(--space-xl);
   }
 
-  .post-header {
-    margin-bottom: var(--space-lg);
+  .post-container {
+    padding: var(--space-lg);
   }
 
-  .post-header h1 {
+  .post-header {
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px dashed var(--border-light);
+  }
+
+  .post-title {
     margin-top: 0;
     margin-bottom: var(--space-sm);
+    font-size: 0.875rem;
+    line-height: 2;
+    animation: title-glow 2s ease-in-out infinite alternate;
   }
 
   .post-meta {
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
     margin-bottom: var(--space-sm);
   }
 
-  .post-meta .updated {
-    color: var(--color-text-muted);
+  .quest-duration {
+    color: var(--mp-blue);
   }
 
-  .post-meta .reading-time {
-    font-style: italic;
+  .quest-duration::before {
+    content: "\u29D7";
+    margin-right: 4px;
+  }
+
+  .quest-date {
+    color: var(--text-dim);
+  }
+
+  .quest-date::before {
+    content: "\u25C8";
+    margin-right: 4px;
+    color: var(--purple-accent);
+  }
+
+  .quest-updated {
+    color: var(--gold-xp);
   }
 
   .post-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 8px;
     margin-top: var(--space-sm);
-  }
-
-  .tag {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--color-text);
-    text-decoration: none;
-    background-color: var(--color-code-bg);
-    padding: 0.2em 0.5em;
-    border-radius: 3px;
-  }
-
-  .tag:hover {
-    text-decoration: underline;
-  }
-
-  .tag:visited {
-    color: var(--color-text);
   }
 
   .post-content {
     margin-top: var(--space-lg);
+    color: var(--text-primary);
+    line-height: 1.7;
+  }
+
+  /* Prose styles for dark theme */
+  .post-content :global(p) {
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+  }
+
+  .post-content :global(strong) {
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  .post-content :global(em) {
+    color: var(--text-secondary);
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+  }
+
+  .post-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .post-content :global(li::marker) {
+    color: var(--pink-hot);
+  }
+
+  .post-content :global(h2) {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: 2px dashed var(--border-outer);
+  }
+
+  .post-content :global(h3) {
+    margin-top: var(--space-lg);
+  }
+
+  .post-content :global(a) {
+    color: var(--cyan-glow);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+
+  .post-content :global(a:hover) {
+    color: var(--pink-hot);
+    text-decoration-style: solid;
+  }
+
+  .post-content :global(img) {
+    border: 4px solid var(--border-light);
+    box-shadow:
+      inset 4px 4px 0 0 var(--border-highlight),
+      inset -4px -4px 0 0 var(--border-outer);
   }
 
   .post-footer {
     margin-top: var(--space-xl);
     padding-top: var(--space-lg);
-    border-top: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
+    border-top: 2px dashed var(--border-light);
   }
 
-  .post-footer a {
-    font-family: var(--font-mono);
-    color: var(--color-text);
-    text-decoration: none;
+  .tagged-with {
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    color: var(--text-dim);
+    margin-bottom: var(--space-xs);
   }
 
-  .post-footer a:hover {
-    text-decoration: underline;
+  .footer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .post-footer a:visited {
-    color: var(--color-text);
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 0.75rem;
+    }
+
+    .post-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+    }
   }
 </style>

@@ -1,43 +1,122 @@
 ---
-// Footer component with minimal design
+// Footer component with RPG save point styling
 const currentYear = new Date().getFullYear();
 ---
 
 <footer>
-  <hr />
-  <p>
-    <a href="/rss.xml">[rss]</a>
+  <div class="save-point">
+    <div class="save-icon"></div>
+    <span class="save-text">PROGRESS SAVED</span>
+  </div>
+
+  <nav class="footer-links">
+    <a href="https://bsky.app/profile/bscott.social" class="footer-link">[BLUESKY]</a>
+    <a href="https://hachyderm.io/@bscott" class="footer-link">[MASTODON]</a>
+    <a href="https://linkedin.com/in/brianlscott/" class="footer-link">[LINKEDIN]</a>
+    <a href="/rss.xml" class="footer-link">[RSS]</a>
+  </nav>
+
+  <p class="copyright">
+    &copy; {currentYear} BRIAN SCOTT <span class="cursor">_</span>
   </p>
-  <p>&copy; {currentYear}</p>
 </footer>
 
 <style>
   footer {
     margin-top: var(--space-xl);
-    padding-top: var(--space-lg);
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
+    padding: var(--space-lg) 0;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
   }
 
-  footer hr {
-    margin-bottom: var(--space-lg);
+  .save-point {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    margin-bottom: var(--space-md);
   }
 
-  footer p {
-    margin-bottom: 0.5rem;
+  .save-icon {
+    width: 20px;
+    height: 20px;
+    background: var(--color-link);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    animation: save-pulse 2s ease-in-out infinite;
   }
 
-  footer a {
+  @keyframes save-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.7;
+    }
+  }
+
+  .save-text {
     font-family: var(--font-mono);
-    color: var(--color-text);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    letter-spacing: 1px;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .footer-link {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
     text-decoration: none;
+    transition: color 0.2s;
   }
 
-  footer a:hover {
-    text-decoration: underline;
+  .footer-link:hover {
+    color: var(--color-link);
   }
 
-  footer a:visited {
-    color: var(--color-text);
+  .footer-link:visited {
+    color: var(--color-text-muted);
+  }
+
+  .copyright {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+  }
+
+  .cursor {
+    display: inline-block;
+    animation: blink 1s steps(2) infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-links {
+      gap: var(--space-sm);
+    }
+
+    .footer-link {
+      font-size: 0.7rem;
+    }
   }
 </style>

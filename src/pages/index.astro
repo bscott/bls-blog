@@ -11,12 +11,39 @@ const posts = allPosts
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 5); // Show 5 most recent posts
 
+// Get all unique tags with counts
+const tagCounts = allPosts.reduce((acc, post) => {
+  post.data.tags.forEach(tag => {
+    acc[tag] = (acc[tag] || 0) + 1;
+  });
+  return acc;
+}, {} as Record<string, number>);
+
+// Sort tags by count (descending)
+const sortedTags = Object.entries(tagCounts)
+  .sort((a, b) => b[1] - a[1]);
+
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+    month: 'short',
+    day: '2-digit'
+  }).toUpperCase();
+}
+
+// Calculate reading time in minutes (just the number)
+function getReadingMinutes(content: string): number {
+  const textWithoutFrontmatter = content.replace(/^---[\s\S]*?---/, '');
+  const textWithoutCode = textWithoutFrontmatter.replace(/```[\s\S]*?```/g, '');
+  const textWithoutInlineCode = textWithoutCode.replace(/`[^`]*`/g, '');
+  const plainText = textWithoutInlineCode
+    .replace(/#{1,6}\s/g, '')
+    .replace(/[*_~`]/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '')
+    .trim();
+  const words = plainText.split(/\s+/).filter(word => word.length > 0);
+  return Math.ceil(words.length / 200);
 }
 ---
 
@@ -24,111 +51,509 @@ function formatDate(date: Date): string {
   title="Brian's Tech Ramblings"
   description="A minimalist blog with a retro-web aesthetic"
 >
-  <section class="intro">
-    <h1>Brian's Tech Ramblings</h1>
-    <p>Welcome to my blog. A minimalist space for thoughts, code, and ideas.</p>
-  </section>
+  <div class="main-content">
+    <!-- Quest Log (Blog Posts) -->
+    <section class="quest-log">
+      <div class="quest-log-header">
+        <h2><span class="pixel-star"></span> ACTIVE QUESTS</h2>
+        <span class="quest-count">{posts.length} ENTRIES</span>
+      </div>
 
-  <section class="recent-posts">
-    <h2>Recent Posts</h2>
-    {posts.length === 0 ? (
-      <p>No posts yet. Check back soon!</p>
-    ) : (
-      <ul class="post-list">
-        {posts.map(post => (
-          <li>
-            <article>
-              <h3>
-                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
-              </h3>
-              <time datetime={post.data.pubDate.toISOString()}>
-                {formatDate(post.data.pubDate)}
-              </time>
-              <p>{post.data.description}</p>
-              {post.data.tags.length > 0 && (
-                <div class="tags">
-                  {post.data.tags.map(tag => (
-                    <a href={`/blog/tags/${tag}`} class="tag">[{tag}]</a>
-                  ))}
-                </div>
-              )}
-            </article>
-          </li>
-        ))}
-      </ul>
-    )}
-    <p>
-      <a href="/blog">[view all posts →]</a>
-    </p>
-  </section>
+      {posts.length === 0 ? (
+        <div class="dialog-box">
+          <p>No quests available. Check back soon, adventurer!</p>
+        </div>
+      ) : (
+        posts.map((post, index) => (
+          <article class:list={["quest-item", { featured: index === 0 }]}>
+            <h3 class="quest-title">
+              <a href={`/blog/${post.slug}`}>{post.data.title.toUpperCase()}</a>
+            </h3>
+            <p class="quest-description">{post.data.description}</p>
+            <div class="quest-meta">
+              <span class="quest-duration">DURATION: {getReadingMinutes(post.body)} MIN</span>
+              <span class="quest-date">{formatDate(post.data.pubDate)}</span>
+            </div>
+            {post.data.tags.length > 0 && (
+              <div class="tag-list">
+                {post.data.tags.map(tag => (
+                  <a
+                    href={`/blog/tags/${tag}`}
+                    class="tag"
+                    data-count={tagCounts[tag] > 1 ? tagCounts[tag] : undefined}
+                  >
+                    {tag.toUpperCase()}
+                  </a>
+                ))}
+              </div>
+            )}
+          </article>
+        ))
+      )}
+
+      <!-- View All Link -->
+      <div class="view-all-link">
+        <a href="/blog" class="nav-link">
+          VIEW ALL QUESTS <span class="continue-indicator">▼</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Adventurer Status Panel -->
+      <div class="status-panel">
+        <h3>◆ ADVENTURER STATUS</h3>
+
+        <div class="stat-bar">
+          <div class="stat-bar-label">
+            <span>BLOG UPTIME</span>
+            <span>99/99</span>
+          </div>
+          <div class="stat-bar-track">
+            <div class="stat-bar-fill hp" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="stat-bar">
+          <div class="stat-bar-label">
+            <span>XP TO NEXT POST</span>
+            <span>420/500</span>
+          </div>
+          <div class="stat-bar-track">
+            <div class="stat-bar-fill xp" style="width: 84%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory (Tags) Panel -->
+      <div class="status-panel">
+        <h3>◆ ITEM INVENTORY</h3>
+        <div class="tag-list inventory-tags">
+          {sortedTags.map(([tag, count]) => (
+            <a
+              href={`/blog/tags/${tag}`}
+              class="tag"
+              data-count={count > 1 ? count : undefined}
+            >
+              {tag.toUpperCase()}
+            </a>
+          ))}
+        </div>
+      </div>
+    </aside>
+  </div>
 </BaseLayout>
 
 <style>
-  .intro {
-    margin-bottom: var(--space-xl);
+  /* RPG Theme Variables */
+  :root {
+    --rpg-bg-deep: #0d0221;
+    --rpg-bg-surface: #1a1a2e;
+    --rpg-bg-elevated: #16213e;
+    --rpg-cyan-glow: #00f5d4;
+    --rpg-cyan-dim: #0a8f7f;
+    --rpg-pink-hot: #ff3c7d;
+    --rpg-pink-dim: #a32854;
+    --rpg-purple-accent: #9201cb;
+    --rpg-gold-xp: #ffd700;
+    --rpg-hp-green: #39ff14;
+    --rpg-mp-blue: #00bfff;
+    --rpg-text-primary: #e8e8e8;
+    --rpg-text-secondary: #a0a0b0;
+    --rpg-text-dim: #6a6a7a;
+    --rpg-border-outer: #1a1a3e;
+    --rpg-border-light: #4a4a8e;
+    --rpg-border-highlight: #7a7abe;
   }
 
-  .intro h1 {
-    margin-top: 0;
+  /* Two-column layout */
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: var(--space-lg);
   }
 
-  .recent-posts h2 {
-    margin-top: 0;
-    margin-bottom: var(--space-lg);
+  @media (max-width: 800px) {
+    .main-content {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      order: -1;
+    }
   }
 
-  .post-list {
-    list-style: none;
-    padding-left: 0;
+  /* Quest Log Header */
+  .quest-log-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
   }
 
-  .post-list li {
-    margin-bottom: var(--space-xl);
+  .quest-log-header h2 {
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--rpg-gold-xp);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    margin: 0;
+    line-height: 1.8;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
   }
 
-  .post-list article {
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-lg);
+  .quest-count {
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--rpg-text-dim);
+    background: var(--rpg-bg-elevated);
+    padding: 4px 8px;
+    border: 2px solid var(--rpg-border-light);
   }
 
-  .post-list h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
+  /* Pixel Star Decoration */
+  .pixel-star {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: var(--rpg-gold-xp);
+    clip-path: polygon(
+      50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+      50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+    );
+    animation: star-twinkle 1.5s ease-in-out infinite;
   }
 
-  .post-list time {
-    display: block;
-    color: var(--color-text-muted);
+  @keyframes star-twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.9); }
+  }
+
+  /* Quest Item - Dialog Box Style */
+  .quest-item {
+    position: relative;
+    background: linear-gradient(180deg, #0c1445 0%, #060d2e 100%);
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    border: 4px solid var(--rpg-border-light);
+    box-shadow:
+      inset 4px 4px 0 0 var(--rpg-border-highlight),
+      inset -4px -4px 0 0 var(--rpg-border-outer);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .quest-item:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 4px 4px 0 0 var(--rpg-border-highlight),
+      inset -4px -4px 0 0 var(--rpg-border-outer),
+      0 8px 24px rgba(0, 245, 212, 0.15);
+  }
+
+  /* Hover arrow indicator */
+  .quest-item::before {
+    content: "►";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--rpg-pink-hot);
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.2s, left 0.2s;
+  }
+
+  .quest-item:hover::before {
+    opacity: 1;
+    left: -16px;
+  }
+
+  /* Featured post - gold border treatment */
+  .quest-item.featured {
+    border-color: var(--rpg-gold-xp);
+    box-shadow:
+      inset 4px 4px 0 0 #ffeaa0,
+      inset -4px -4px 0 0 #b8860b,
+      0 0 20px rgba(255, 215, 0, 0.2);
+  }
+
+  .quest-item.featured::after {
+    content: "★ FEATURED";
+    position: absolute;
+    top: -12px;
+    right: var(--space-sm);
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.4rem;
+    color: var(--rpg-bg-deep);
+    background: var(--rpg-gold-xp);
+    padding: 2px 8px;
+  }
+
+  /* Quest Title */
+  .quest-title {
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--rpg-cyan-glow);
+    margin: 0 0 var(--space-sm) 0;
+    line-height: 1.8;
+  }
+
+  .quest-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .quest-title a:hover {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+
+  /* Quest Description - readable font */
+  .quest-description {
+    color: var(--rpg-text-secondary);
     font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .post-list p {
     margin-bottom: var(--space-sm);
+    line-height: 1.7;
   }
 
-  .tags {
+  /* Quest Metadata */
+  .quest-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-sm);
+    align-items: center;
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.5rem;
+  }
+
+  .quest-duration {
+    color: var(--rpg-mp-blue);
+  }
+
+  .quest-duration::before {
+    content: "⧗";
+    margin-right: 4px;
+  }
+
+  .quest-date {
+    color: var(--rpg-text-dim);
+  }
+
+  .quest-date::before {
+    content: "◈";
+    margin-right: 4px;
+    color: var(--rpg-purple-accent);
+  }
+
+  /* Tags - Inventory Item Badges */
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: var(--space-sm);
   }
 
   .tag {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--color-text);
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.4rem;
+    padding: 4px 8px;
+    background: var(--rpg-bg-elevated);
+    color: var(--rpg-text-secondary);
+    border: 2px solid var(--rpg-border-outer);
     text-decoration: none;
-    background-color: var(--color-code-bg);
-    padding: 0.2em 0.5em;
-    border-radius: 3px;
+    transition: all 0.2s;
+    position: relative;
   }
 
   .tag:hover {
-    text-decoration: underline;
+    background: var(--rpg-pink-dim);
+    border-color: var(--rpg-pink-hot);
+    color: var(--rpg-text-primary);
+    box-shadow: 0 0 8px var(--rpg-pink-hot);
   }
 
   .tag:visited {
-    color: var(--color-text);
+    color: var(--rpg-text-secondary);
+  }
+
+  .tag:visited:hover {
+    color: var(--rpg-text-primary);
+  }
+
+  /* Tag quantity badge */
+  .tag[data-count]::after {
+    content: attr(data-count);
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--rpg-pink-hot);
+    color: white;
+    font-size: 0.35rem;
+    padding: 2px 4px;
+    min-width: 14px;
+    text-align: center;
+  }
+
+  /* View All Link */
+  .view-all-link {
+    text-align: center;
+    margin-top: var(--space-lg);
+  }
+
+  .nav-link {
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--rpg-text-primary);
+    text-decoration: none;
+    padding: var(--space-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--rpg-cyan-glow);
+  }
+
+  .nav-link:visited {
+    color: var(--rpg-text-primary);
+  }
+
+  .nav-link:visited:hover {
+    color: var(--rpg-cyan-glow);
+  }
+
+  /* Blinking arrow indicator */
+  .continue-indicator {
+    display: inline-block;
+    animation: blink 1s steps(2) infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Sidebar */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  /* Status Panel - Dialog Box Style */
+  .status-panel {
+    position: relative;
+    background: linear-gradient(180deg, #0c1445 0%, #060d2e 100%);
+    padding: var(--space-md);
+    border: 4px solid var(--rpg-border-light);
+    box-shadow:
+      inset 4px 4px 0 0 var(--rpg-border-highlight),
+      inset -4px -4px 0 0 var(--rpg-border-outer);
+  }
+
+  .status-panel h3 {
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--rpg-gold-xp);
+    margin: 0 0 var(--space-sm) 0;
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px dashed var(--rpg-border-light);
+    line-height: 1.8;
+  }
+
+  /* HP/XP style bars */
+  .stat-bar {
+    margin-bottom: var(--space-sm);
+  }
+
+  .stat-bar:last-child {
+    margin-bottom: 0;
+  }
+
+  .stat-bar-label {
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.4rem;
+    color: var(--rpg-text-secondary);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .stat-bar-track {
+    height: 12px;
+    background: #050612;
+    border: 2px solid var(--rpg-border-outer);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-bar-fill {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.5s ease;
+  }
+
+  .stat-bar-fill.hp {
+    background: linear-gradient(180deg, var(--rpg-hp-green) 0%, #1a8f0a 100%);
+    box-shadow: 0 0 8px var(--rpg-hp-green);
+  }
+
+  .stat-bar-fill.xp {
+    background: linear-gradient(180deg, var(--rpg-gold-xp) 0%, #b8860b 100%);
+    box-shadow: 0 0 8px var(--rpg-gold-xp);
+  }
+
+  /* Inventory tags in sidebar */
+  .inventory-tags {
+    margin-top: var(--space-sm);
+  }
+
+  /* Dialog box for empty state */
+  .dialog-box {
+    position: relative;
+    background: linear-gradient(180deg, #0c1445 0%, #060d2e 100%);
+    padding: var(--space-md);
+    margin: var(--space-sm) 0;
+    border: 4px solid var(--rpg-border-light);
+    box-shadow:
+      0 0 20px rgba(0, 245, 212, 0.1),
+      inset 4px 4px 0 0 var(--rpg-border-highlight),
+      inset -4px -4px 0 0 var(--rpg-border-outer),
+      4px 4px 0 0 var(--rpg-border-outer),
+      -4px -4px 0 0 var(--rpg-border-highlight);
+  }
+
+  .dialog-box::before,
+  .dialog-box::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--rpg-cyan-glow);
+    box-shadow: 0 0 8px var(--rpg-cyan-glow);
+  }
+
+  .dialog-box::before {
+    top: -4px;
+    left: -4px;
+  }
+
+  .dialog-box::after {
+    bottom: -4px;
+    right: -4px;
+  }
+
+  .dialog-box p {
+    font-family: 'Press Start 2P', var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--rpg-text-secondary);
+    margin: 0;
+    line-height: 1.8;
   }
 </style>

@@ -1,47 +1,164 @@
 ---
-// Header component with ASCII bracket navigation
+// Header component with RPG menu styling
 ---
 
-<header>
-  <nav>
-    <a href="/">[home]</a>
-    <a href="/blog">[blog]</a>
-    <a href="/search">[search]</a>
-    <a href="/about">[about]</a>
+<header class="header">
+  <h1 class="site-title">BRIAN'S TECH RAMBLINGS</h1>
+  <p class="site-subtitle">~ LEVEL 99 TECHNOLOGIST ~</p>
+
+  <nav class="main-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="/" class="nav-link">HOME</a>
+      </li>
+      <li class="nav-item">
+        <a href="/blog" class="nav-link">QUEST LOG</a>
+      </li>
+      <li class="nav-item">
+        <a href="/search" class="nav-link">SEARCH</a>
+      </li>
+      <li class="nav-item">
+        <a href="/about" class="nav-link">STATUS</a>
+      </li>
+      <li class="nav-item">
+        <a href="/rss.xml" class="nav-link">SUBSCRIBE</a>
+      </li>
+    </ul>
   </nav>
 </header>
 
 <style>
-  header {
-    padding-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: var(--space-lg);
+  /* RPG color fallbacks - use global vars if available */
+  .header {
+    --cyan-glow: var(--cyan-glow, #00f5d4);
+    --cyan-dim: var(--cyan-dim, #0a8f7f);
+    --pink-hot: var(--pink-hot, #ff3c7d);
+    --text-primary: var(--text-primary, #e8e8e8);
+    --text-secondary: var(--text-secondary, #a0a0b0);
+    --border-light: var(--border-light, #4a4a8e);
   }
 
-  nav {
+  .header {
+    text-align: center;
+    padding: var(--space-xl, 3rem) 0 var(--space-lg, 2rem);
+    border-bottom: 2px solid var(--border-light);
+    margin-bottom: var(--space-lg, 2rem);
+  }
+
+  .site-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.25rem;
+    color: var(--cyan-glow);
+    text-shadow:
+      0 0 10px var(--cyan-glow),
+      0 0 20px var(--cyan-glow),
+      0 0 40px var(--cyan-dim);
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+    line-height: 1.8;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    animation: title-glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes title-glow {
+    from {
+      text-shadow: 0 0 10px var(--cyan-glow), 0 0 20px var(--cyan-glow);
+    }
+    to {
+      text-shadow: 0 0 15px var(--cyan-glow), 0 0 30px var(--cyan-glow), 0 0 50px var(--cyan-dim);
+    }
+  }
+
+  .site-subtitle {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    margin: 0;
+  }
+
+  .main-nav {
+    margin-top: 1.5rem;
+  }
+
+  .nav-list {
+    list-style: none;
     display: flex;
-    gap: var(--space-md);
-    font-family: var(--font-mono);
+    justify-content: center;
+    gap: 2rem;
     flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
   }
 
-  nav a {
-    color: var(--color-text);
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.625rem;
+    color: var(--text-primary);
     text-decoration: none;
-    transition: text-decoration 0.2s;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
   }
 
-  nav a:hover {
-    text-decoration: underline;
+  .nav-link:hover,
+  .nav-link:focus {
+    color: var(--cyan-glow);
   }
 
-  nav a:visited {
-    color: var(--color-text);
+  .nav-link:visited {
+    color: var(--text-primary);
+  }
+
+  .nav-link:visited:hover {
+    color: var(--cyan-glow);
+  }
+
+  /* Arrow cursor indicator */
+  .nav-link::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid var(--pink-hot);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.2s;
+  }
+
+  .nav-link:hover::before,
+  .nav-link:focus::before,
+  .nav-link.active::before {
+    opacity: 1;
+    transform: translateX(0);
+    animation: cursor-blink 0.5s steps(2) infinite;
+  }
+
+  @keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
 
   @media (max-width: 640px) {
-    nav {
-      gap: var(--space-sm);
+    .site-title {
+      font-size: 1rem;
+    }
+
+    .nav-list {
+      gap: 1rem;
+    }
+
+    .nav-link {
+      font-size: 0.5rem;
+      padding: 0.5rem;
     }
   }
 </style>
