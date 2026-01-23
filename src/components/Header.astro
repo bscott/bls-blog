@@ -1,10 +1,19 @@
 ---
 // Header component with RPG menu styling
+import SoundToggle from './SoundToggle.astro';
 ---
 
 <header class="header">
-  <h1 class="site-title">BRIAN'S TECH RAMBLINGS</h1>
-  <p class="site-subtitle">~ LEVEL 99 TECHNOLOGIST ~</p>
+  <div class="header-top">
+    <div class="header-spacer"></div>
+    <div class="header-title-group">
+      <h1 class="site-title">BRIAN'S TECH RAMBLINGS</h1>
+      <p class="site-subtitle">~ LEVEL 99 TECHNOLOGIST ~</p>
+    </div>
+    <div class="header-controls">
+      <SoundToggle />
+    </div>
+  </div>
 
   <nav class="main-nav">
     <ul class="nav-list">
@@ -43,6 +52,31 @@
     padding: var(--space-xl, 3rem) 0 var(--space-lg, 2rem);
     border-bottom: 2px solid var(--border-light);
     margin-bottom: var(--space-lg, 2rem);
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0;
+  }
+
+  .header-spacer {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  .header-title-group {
+    flex: 2;
+    text-align: center;
+  }
+
+  .header-controls {
+    flex: 1;
+    min-width: 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
   }
 
   .site-title {
@@ -147,18 +181,75 @@
     50% { opacity: 0.5; }
   }
 
-  @media (max-width: 640px) {
+  /* Tablet breakpoint */
+  @media (max-width: 768px) {
+    .header-top {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header-spacer {
+      display: none;
+    }
+
+    .header-title-group {
+      order: 1;
+    }
+
+    .header-controls {
+      order: 2;
+      justify-content: center;
+      margin-top: 0.75rem;
+    }
+
     .site-title {
       font-size: 1rem;
     }
 
     .nav-list {
-      gap: 1rem;
+      gap: 0.75rem;
+    }
+
+    /* Ensure 44px touch targets for navigation */
+    .nav-link {
+      font-size: 0.5rem;
+      padding: 12px 14px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    .header {
+      padding: var(--space-lg, 2rem) 0 var(--space-md, 1.5rem);
+    }
+
+    .site-title {
+      font-size: 0.75rem;
+      word-wrap: break-word;
+      max-width: 100%;
+    }
+
+    .site-subtitle {
+      font-size: 0.4rem;
+    }
+
+    .nav-list {
+      gap: 0.5rem;
+      justify-content: center;
     }
 
     .nav-link {
-      font-size: 0.5rem;
-      padding: 0.5rem;
+      font-size: 0.45rem;
+      padding: 12px 10px;
+      min-height: 44px;
+    }
+
+    /* Hide arrow indicator on mobile to save space */
+    .nav-link::before {
+      display: none;
     }
   }
 </style>

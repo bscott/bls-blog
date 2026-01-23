@@ -77,9 +77,43 @@ const tocHeadings = headings.filter(h => h.depth <= 3);
     padding-left: var(--space-md);
   }
 
-  @media (max-width: 640px) {
+  /* Tablet breakpoint */
+  @media (max-width: 768px) {
     .toc {
       padding: var(--space-sm);
+    }
+
+    /* Ensure touch targets for TOC links */
+    .toc a {
+      display: inline-block;
+      padding: 8px 0;
+      min-height: 44px;
+      line-height: 1.5;
+    }
+
+    .toc li {
+      margin-bottom: 0;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    .toc {
+      padding: var(--space-xs);
+      margin: var(--space-md) 0;
+    }
+
+    .toc h2 {
+      font-size: 0.875rem;
+    }
+
+    .toc a {
+      font-size: 0.85rem;
+      padding: 10px 0;
+    }
+
+    .toc-level-3 {
+      padding-left: var(--space-sm);
     }
   }
 </style>

@@ -228,15 +228,128 @@ function formatDate(date: Date): string {
     gap: 8px;
   }
 
-  @media (max-width: 640px) {
+  /* Tablet breakpoint */
+  @media (max-width: 768px) {
+    .post-container {
+      padding: var(--space-md);
+    }
+
     .post-title {
       font-size: 0.75rem;
+      line-height: 2.2;
     }
 
     .post-meta {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--space-xs);
+    }
+
+    /* Tags - ensure touch targets */
+    .post-tags .tag,
+    .footer-tags .tag {
+      padding: 10px 14px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .post-tags,
+    .footer-tags {
+      gap: 10px;
+    }
+
+    /* Ensure line lengths are readable */
+    .post-content {
+      max-width: 100%;
+    }
+
+    .post-content :global(p),
+    .post-content :global(li) {
+      font-size: 1rem; /* Minimum 16px for readability */
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    .blog-post {
+      margin-bottom: var(--space-lg);
+    }
+
+    .post-container {
+      padding: var(--space-sm);
+    }
+
+    .post-header {
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+    }
+
+    .post-title {
+      font-size: 0.625rem;
+      line-height: 2.4;
+    }
+
+    .post-meta {
+      font-size: 0.45rem;
+    }
+
+    /* Post content - full width, readable */
+    .post-content {
+      margin-top: var(--space-md);
+    }
+
+    .post-content :global(h2) {
+      font-size: 0.625rem;
+      margin-top: var(--space-lg);
+      padding-top: var(--space-sm);
+    }
+
+    .post-content :global(h3) {
+      font-size: 0.5rem;
+      margin-top: var(--space-md);
+    }
+
+    /* Ensure body text stays at 16px for readability */
+    .post-content :global(p) {
+      font-size: 1rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .post-content :global(ul),
+    .post-content :global(ol) {
+      padding-left: var(--space-md);
+    }
+
+    .post-content :global(li) {
+      font-size: 1rem;
+    }
+
+    /* Code blocks - readable on mobile */
+    .post-content :global(pre) {
+      padding: var(--space-xs);
+      font-size: 0.8rem;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .post-content :global(code) {
+      font-size: 0.9rem;
+    }
+
+    /* Images - full width */
+    .post-content :global(img) {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .post-footer {
+      margin-top: var(--space-lg);
+      padding-top: var(--space-md);
+    }
+
+    .tagged-with {
+      font-size: 0.45rem;
     }
   }
 </style>

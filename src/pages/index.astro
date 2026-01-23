@@ -174,13 +174,102 @@ function getReadingMinutes(content: string): number {
     gap: var(--space-lg);
   }
 
-  @media (max-width: 800px) {
+  /* Tablet breakpoint - stack sidebar below content */
+  @media (max-width: 768px) {
     .main-content {
       grid-template-columns: 1fr;
+      gap: var(--space-md);
     }
 
+    /* Sidebar goes BELOW content on mobile (order: 1 means after quest-log) */
     .sidebar {
-      order: -1;
+      order: 1;
+    }
+
+    .quest-log {
+      order: 0;
+    }
+
+    /* Quest items - prevent horizontal overflow */
+    .quest-item {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    /* Hide the hover arrow on mobile - prevents overflow */
+    .quest-item::before {
+      display: none;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    .main-content {
+      gap: var(--space-sm);
+    }
+
+    .quest-log-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+    }
+
+    .quest-log-header h2 {
+      font-size: 0.625rem;
+    }
+
+    .quest-count {
+      font-size: 0.4rem;
+    }
+
+    /* Quest title - ensure readable */
+    .quest-title {
+      font-size: 0.5rem;
+      line-height: 2;
+    }
+
+    /* Quest description - maintain readability (16px minimum) */
+    .quest-description {
+      font-size: 1rem;
+    }
+
+    /* Quest meta - stack vertically */
+    .quest-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 0.45rem;
+    }
+
+    /* Tags - ensure touch targets */
+    .tag {
+      padding: 10px 14px;
+      min-height: 44px;
+    }
+
+    .tag-list {
+      gap: 8px;
+    }
+
+    /* Status panels - reduce padding */
+    .status-panel {
+      padding: var(--space-sm);
+    }
+
+    .status-panel h3 {
+      font-size: 0.45rem;
+    }
+
+    /* Stat bar labels */
+    .stat-bar-label {
+      font-size: 0.35rem;
+    }
+
+    /* Navigation link */
+    .nav-link {
+      font-size: 0.5rem;
+      padding: 12px 16px;
+      min-height: 44px;
     }
   }
 

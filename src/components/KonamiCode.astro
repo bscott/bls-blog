@@ -1,0 +1,392 @@
+---
+// Konami Code Easter Egg
+// Enter: ↑ ↑ ↓ ↓ ← → ← → B A to activate
+---
+
+<!-- Overlay for the cheat activation effect -->
+<div id="konami-overlay" class="konami-overlay" aria-hidden="true">
+  <div class="konami-message">
+    <div class="konami-text">CHEAT ACTIVATED</div>
+    <div class="konami-subtext">+30 LIVES</div>
+  </div>
+</div>
+
+<!-- Secret badge that appears after activation -->
+<div id="konami-badge" class="konami-badge" aria-hidden="true">
+  <span class="badge-icon">★</span>
+  <span class="badge-text">CONTRA</span>
+</div>
+
+<style>
+  /* ═══════════════════════════════════════════════════════════════
+     KONAMI CODE EASTER EGG STYLES
+  ═══════════════════════════════════════════════════════════════ */
+
+  .konami-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(155, 188, 15, 0.95);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.1s;
+    pointer-events: none;
+  }
+
+  .konami-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    animation: flash-in 2s ease-out forwards;
+  }
+
+  .konami-message {
+    text-align: center;
+    animation: message-appear 0.5s ease-out;
+  }
+
+  .konami-text {
+    font-family: var(--font-pixel);
+    font-size: clamp(1rem, 5vw, 2rem);
+    color: #0f380f;
+    text-shadow:
+      4px 4px 0 #306230,
+      -2px -2px 0 #8bac0f;
+    animation: text-flicker 0.1s steps(2) 5;
+    letter-spacing: 4px;
+  }
+
+  .konami-subtext {
+    font-family: var(--font-pixel);
+    font-size: clamp(0.5rem, 2.5vw, 0.875rem);
+    color: #306230;
+    margin-top: 1rem;
+    animation: blink-text 0.3s steps(2) 3;
+  }
+
+  /* Secret badge in corner */
+  .konami-badge {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(180deg, #0c1445 0%, #060d2e 100%);
+    border: 2px solid var(--gold-xp, #ffd700);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease-out;
+    box-shadow:
+      0 0 10px rgba(255, 215, 0, 0.3),
+      inset 2px 2px 0 0 rgba(255, 215, 0, 0.3),
+      inset -2px -2px 0 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .konami-badge.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .badge-icon {
+    color: var(--gold-xp, #ffd700);
+    font-size: 1rem;
+    animation: star-spin 2s ease-in-out infinite;
+  }
+
+  .badge-text {
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    color: var(--gold-xp, #ffd700);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Game Boy palette mode */
+  :global(html.gameboy-mode) {
+    filter: sepia(100%) hue-rotate(50deg) saturate(200%) contrast(0.9);
+  }
+
+  :global(html.gameboy-mode) body {
+    background: #9bbc0f !important;
+  }
+
+  /* Animations */
+  @keyframes flash-in {
+    0% {
+      opacity: 1;
+      background: rgba(255, 255, 255, 1);
+    }
+    10% {
+      background: rgba(155, 188, 15, 0.95);
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @keyframes message-appear {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes text-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  @keyframes blink-text {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes star-spin {
+    0%, 100% {
+      transform: rotate(0deg) scale(1);
+    }
+    25% {
+      transform: rotate(10deg) scale(1.1);
+    }
+    50% {
+      transform: rotate(0deg) scale(1);
+    }
+    75% {
+      transform: rotate(-10deg) scale(1.1);
+    }
+  }
+
+  /* Pixel confetti particles */
+  .pixel-particle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    z-index: 99998;
+    animation: particle-fall 2s ease-out forwards;
+  }
+
+  @keyframes particle-fall {
+    0% {
+      opacity: 1;
+      transform: translateY(0) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(100vh) rotate(720deg);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .konami-badge {
+      bottom: 10px;
+      right: 10px;
+      padding: 6px 10px;
+    }
+
+    .badge-text {
+      font-size: 0.4rem;
+    }
+  }
+</style>
+
+<script>
+  // Konami Code Sequence: ↑ ↑ ↓ ↓ ← → ← → B A
+  const KONAMI_CODE = [
+    'ArrowUp', 'ArrowUp',
+    'ArrowDown', 'ArrowDown',
+    'ArrowLeft', 'ArrowRight',
+    'ArrowLeft', 'ArrowRight',
+    'KeyB', 'KeyA'
+  ];
+
+  const STORAGE_KEY = 'konami-activated';
+  const TIMEOUT_MS = 2000; // Reset sequence after 2 seconds of inactivity
+
+  let inputSequence: string[] = [];
+  let lastInputTime = 0;
+  let timeoutId: number | undefined;
+
+  // Check if already activated (show badge)
+  function checkStoredState() {
+    if (localStorage.getItem(STORAGE_KEY) === 'true') {
+      showBadge();
+    }
+  }
+
+  // Create pixel confetti particles
+  function createConfetti() {
+    const colors = ['#ff3c7d', '#00f5d4', '#ffd700', '#9201cb', '#39ff14', '#00bfff'];
+    const particleCount = 30;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'pixel-particle';
+      particle.style.left = `${Math.random() * 100}vw`;
+      particle.style.top = `${Math.random() * -20}vh`;
+      particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      particle.style.animationDelay = `${Math.random() * 0.5}s`;
+      particle.style.animationDuration = `${1.5 + Math.random()}s`;
+      document.body.appendChild(particle);
+
+      // Clean up particle after animation
+      setTimeout(() => {
+        particle.remove();
+      }, 2500);
+    }
+  }
+
+  // Play a simple victory sound using Web Audio API
+  function playVictorySound() {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+      // Play a quick ascending arpeggio
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+
+      notes.forEach((freq, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'square';
+        oscillator.frequency.value = freq;
+
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime + index * 0.1);
+        gainNode.gain.exponentialDecayTo?.(0.01, audioContext.currentTime + index * 0.1 + 0.15)
+          || gainNode.gain.setValueAtTime(0.01, audioContext.currentTime + index * 0.1 + 0.15);
+
+        oscillator.start(audioContext.currentTime + index * 0.1);
+        oscillator.stop(audioContext.currentTime + index * 0.1 + 0.2);
+      });
+    } catch (e) {
+      // Audio not supported or blocked, silently fail
+      console.log('Audio not available');
+    }
+  }
+
+  // Show the secret badge
+  function showBadge() {
+    const badge = document.getElementById('konami-badge');
+    if (badge) {
+      badge.classList.add('visible');
+    }
+  }
+
+  // Activate the easter egg
+  function activateKonami() {
+    // Save activation state
+    localStorage.setItem(STORAGE_KEY, 'true');
+
+    // Show overlay
+    const overlay = document.getElementById('konami-overlay');
+    if (overlay) {
+      overlay.classList.add('active');
+
+      // Remove active class after animation completes
+      setTimeout(() => {
+        overlay.classList.remove('active');
+      }, 2000);
+    }
+
+    // Create confetti
+    createConfetti();
+
+    // Play sound
+    playVictorySound();
+
+    // Show badge
+    setTimeout(() => {
+      showBadge();
+    }, 1000);
+
+    // Briefly apply Game Boy mode
+    document.documentElement.classList.add('gameboy-mode');
+    setTimeout(() => {
+      document.documentElement.classList.remove('gameboy-mode');
+    }, 2000);
+
+    // Reset sequence
+    inputSequence = [];
+  }
+
+  // Handle key input
+  function handleKeyDown(event: KeyboardEvent) {
+    const now = Date.now();
+
+    // Reset sequence if too much time has passed
+    if (now - lastInputTime > TIMEOUT_MS) {
+      inputSequence = [];
+    }
+    lastInputTime = now;
+
+    // Clear existing timeout
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    // Set new timeout to reset sequence
+    timeoutId = window.setTimeout(() => {
+      inputSequence = [];
+    }, TIMEOUT_MS);
+
+    // Add current key to sequence
+    inputSequence.push(event.code);
+
+    // Keep only the last N keys (length of Konami code)
+    if (inputSequence.length > KONAMI_CODE.length) {
+      inputSequence.shift();
+    }
+
+    // Check if sequence matches
+    if (inputSequence.length === KONAMI_CODE.length) {
+      const matches = inputSequence.every((key, index) => key === KONAMI_CODE[index]);
+      if (matches) {
+        activateKonami();
+      }
+    }
+  }
+
+  // Initialize
+  function init() {
+    // Check stored state on load
+    checkStoredState();
+
+    // Listen for keyboard events
+    window.addEventListener('keydown', handleKeyDown);
+  }
+
+  // Run on page load and view transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // Support Astro view transitions
+  document.addEventListener('astro:page-load', init);
+</script>

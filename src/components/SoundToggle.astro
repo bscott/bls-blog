@@ -1,0 +1,339 @@
+---
+// SoundToggle component - 8-bit sound effects toggle
+// Uses Web Audio API to generate retro sounds programmatically
+---
+
+<div class="sound-toggle" id="sound-toggle">
+  <button class="sfx-button" id="sfx-button" aria-label="Toggle sound effects" title="Toggle SFX">
+    <span class="sfx-icon" id="sfx-icon">&#x266A;</span>
+    <span class="sfx-label" id="sfx-label">SFX:OFF</span>
+  </button>
+</div>
+
+<style>
+  .sound-toggle {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .sfx-button {
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 0.5rem;
+    background: var(--bg-surface, #1a1a2e);
+    color: var(--text-dim, #6a6a7a);
+    border: 2px solid var(--border-outer, #1a1a3e);
+    padding: 4px 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .sfx-button:hover {
+    border-color: var(--cyan-glow, #00f5d4);
+    color: var(--cyan-glow, #00f5d4);
+  }
+
+  .sfx-button:focus {
+    outline: 2px solid var(--cyan-glow, #00f5d4);
+    outline-offset: 2px;
+  }
+
+  .sfx-button.active {
+    background: var(--bg-elevated, #16213e);
+    color: var(--hp-green, #39ff14);
+    border-color: var(--hp-green, #39ff14);
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+  }
+
+  .sfx-icon {
+    font-size: 0.625rem;
+    line-height: 1;
+  }
+
+  .sfx-button.active .sfx-icon {
+    animation: note-bounce 0.5s ease infinite;
+  }
+
+  @keyframes note-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .sfx-button.active .sfx-icon {
+      animation: none;
+    }
+  }
+
+  /* Tablet breakpoint - ensure 44px touch target */
+  @media (max-width: 768px) {
+    .sfx-button {
+      min-height: 44px;
+      min-width: 44px;
+      padding: 8px 12px;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    .sfx-button {
+      font-size: 0.45rem;
+      padding: 10px 14px;
+    }
+
+    .sfx-icon {
+      font-size: 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  // 8-bit Sound Effects System using Web Audio API
+  class RetroSoundSystem {
+    private audioContext: AudioContext | null = null;
+    private enabled: boolean = false;
+    private initialized: boolean = false;
+    private reducedMotion: boolean = false;
+
+    constructor() {
+      // Check for reduced motion preference
+      this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Load saved preference (default: OFF)
+      const savedPref = localStorage.getItem('sfx-enabled');
+      this.enabled = savedPref === 'true';
+
+      // If reduced motion is preferred and no explicit preference saved, keep disabled
+      if (this.reducedMotion && savedPref === null) {
+        this.enabled = false;
+      }
+    }
+
+    private initAudio(): void {
+      if (this.initialized) return;
+
+      try {
+        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        this.initialized = true;
+      } catch (e) {
+        console.warn('Web Audio API not supported');
+      }
+    }
+
+    public isEnabled(): boolean {
+      return this.enabled;
+    }
+
+    public toggle(): boolean {
+      this.enabled = !this.enabled;
+      localStorage.setItem('sfx-enabled', String(this.enabled));
+
+      if (this.enabled) {
+        this.initAudio();
+        // Play a confirmation sound when enabling
+        this.playConfirm();
+      }
+
+      return this.enabled;
+    }
+
+    // Short blip for menu hover
+    public playBlip(): void {
+      if (!this.enabled || !this.audioContext) return;
+
+      const ctx = this.audioContext;
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      // Square wave for that 8-bit feel
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(880, ctx.currentTime); // A5
+      oscillator.frequency.setValueAtTime(1047, ctx.currentTime + 0.03); // C6
+
+      gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.08);
+    }
+
+    // Select/confirm sound for clicks
+    public playSelect(): void {
+      if (!this.enabled || !this.audioContext) return;
+
+      const ctx = this.audioContext;
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.type = 'square';
+      // Rising two-note confirm sound
+      oscillator.frequency.setValueAtTime(523, ctx.currentTime); // C5
+      oscillator.frequency.setValueAtTime(659, ctx.currentTime + 0.06); // E5
+      oscillator.frequency.setValueAtTime(784, ctx.currentTime + 0.12); // G5
+
+      gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.08, ctx.currentTime + 0.12);
+      gainNode.gain.setValueAtTime(0.01, ctx.currentTime + 0.2);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.2);
+    }
+
+    // Confirmation sound (higher pitched)
+    public playConfirm(): void {
+      if (!this.audioContext) {
+        this.initAudio();
+      }
+      if (!this.audioContext) return;
+
+      const ctx = this.audioContext;
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.type = 'square';
+      // Upward arpeggio
+      oscillator.frequency.setValueAtTime(440, ctx.currentTime); // A4
+      oscillator.frequency.setValueAtTime(554, ctx.currentTime + 0.05); // C#5
+      oscillator.frequency.setValueAtTime(659, ctx.currentTime + 0.1); // E5
+      oscillator.frequency.setValueAtTime(880, ctx.currentTime + 0.15); // A5
+
+      gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.08, ctx.currentTime + 0.15);
+      gainNode.gain.setValueAtTime(0.01, ctx.currentTime + 0.25);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.25);
+    }
+
+    // Subtle page load chime
+    public playPageLoad(): void {
+      if (!this.enabled || !this.audioContext) return;
+
+      const ctx = this.audioContext;
+
+      // First note
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.type = 'triangle'; // Softer sound for page load
+      osc1.frequency.setValueAtTime(523, ctx.currentTime); // C5
+      gain1.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain1.gain.setValueAtTime(0.01, ctx.currentTime + 0.15);
+      osc1.start(ctx.currentTime);
+      osc1.stop(ctx.currentTime + 0.15);
+
+      // Second note (delayed)
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(659, ctx.currentTime + 0.1); // E5
+      gain2.gain.setValueAtTime(0, ctx.currentTime);
+      gain2.gain.setValueAtTime(0.06, ctx.currentTime + 0.1);
+      gain2.gain.setValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc2.start(ctx.currentTime + 0.1);
+      osc2.stop(ctx.currentTime + 0.25);
+    }
+
+    // Disable sound for toggle off
+    public playDisable(): void {
+      if (!this.audioContext) return;
+
+      const ctx = this.audioContext;
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.type = 'square';
+      // Downward tone
+      oscillator.frequency.setValueAtTime(523, ctx.currentTime); // C5
+      oscillator.frequency.setValueAtTime(392, ctx.currentTime + 0.08); // G4
+
+      gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.01, ctx.currentTime + 0.15);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.15);
+    }
+  }
+
+  // Initialize global sound system
+  const soundSystem = new RetroSoundSystem();
+  (window as any).retroSound = soundSystem;
+
+  // Setup UI
+  function initSoundToggle() {
+    const button = document.getElementById('sfx-button');
+    const label = document.getElementById('sfx-label');
+
+    if (!button || !label) return;
+
+    // Set initial state
+    function updateUI(enabled: boolean) {
+      if (enabled) {
+        button.classList.add('active');
+        label.textContent = 'SFX:ON';
+      } else {
+        button.classList.remove('active');
+        label.textContent = 'SFX:OFF';
+      }
+    }
+
+    updateUI(soundSystem.isEnabled());
+
+    // Toggle handler
+    button.addEventListener('click', () => {
+      const wasEnabled = soundSystem.isEnabled();
+      if (wasEnabled) {
+        soundSystem.playDisable();
+      }
+      const nowEnabled = soundSystem.toggle();
+      updateUI(nowEnabled);
+    });
+
+    // Add hover sounds to nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        soundSystem.playBlip();
+      });
+    });
+
+    // Add click sounds to all links (excluding the SFX button itself)
+    document.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        soundSystem.playSelect();
+      });
+    });
+
+    // Page load sound (delayed slightly for better effect)
+    if (soundSystem.isEnabled()) {
+      setTimeout(() => {
+        soundSystem.playPageLoad();
+      }, 300);
+    }
+  }
+
+  // Run on initial load
+  initSoundToggle();
+
+  // Re-run on Astro page transitions (View Transitions)
+  document.addEventListener('astro:page-load', initSoundToggle);
+</script>

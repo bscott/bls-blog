@@ -620,9 +620,13 @@ main {
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVE ADJUSTMENTS
 ═══════════════════════════════════════════════════════════════ */
-@media (max-width: 800px) {
+
+/* Tablet breakpoint (768px) */
+@media (max-width: 768px) {
   body {
     padding: var(--space-sm);
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
   }
 
   h1 {
@@ -637,29 +641,107 @@ main {
     font-size: 0.625rem;
   }
 
+  /* Dialog boxes - ensure corners don't overflow */
   .dialog-box {
     padding: var(--space-sm);
+    overflow: visible;
   }
 
+  .dialog-box::before,
+  .dialog-box::after {
+    width: 6px;
+    height: 6px;
+  }
+
+  .dialog-box::before {
+    top: -3px;
+    left: -3px;
+  }
+
+  .dialog-box::after {
+    bottom: -3px;
+    right: -3px;
+  }
+
+  /* Code blocks - horizontal scroll without breaking layout */
   pre {
     padding: var(--space-sm);
     font-size: 0.875rem;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   pre::before {
     font-size: 0.4rem;
   }
 
+  pre code {
+    font-size: 0.875rem;
+  }
+
+  /* Tags - minimum 44px touch target */
   .tag {
-    font-size: 0.35rem;
-    padding: 3px 6px;
+    font-size: 0.5rem;
+    padding: 10px 14px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tag-list {
+    gap: 10px;
+  }
+
+  /* Tag quantity badge - adjust for larger tags */
+  .tag[data-count]::after {
+    top: -4px;
+    right: -4px;
+    font-size: 0.4rem;
+    padding: 2px 5px;
   }
 
   .stat-bar-label {
-    font-size: 0.35rem;
+    font-size: 0.4rem;
+  }
+
+  /* Tables - horizontal scroll */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Quest items - ensure hover indicator doesn't cause overflow */
+  .quest-item::before {
+    left: 8px;
+  }
+
+  .quest-item:hover::before {
+    left: 12px;
+  }
+
+  /* Navigation links - touch targets */
+  .nav-link {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Footer links - touch targets */
+  .footer-link {
+    min-height: 44px;
+    padding: 10px 12px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
   }
 }
 
+/* Mobile breakpoint (480px) */
 @media (max-width: 480px) {
   :root {
     --space-md: 16px;
@@ -667,12 +749,131 @@ main {
     --space-xl: 32px;
   }
 
-  h1 {
-    font-size: 0.875rem;
-  }
-
   body {
     padding: var(--space-xs);
+    /* Ensure no horizontal overflow */
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 0.75rem;
+    word-wrap: break-word;
+  }
+
+  h2 {
+    font-size: 0.625rem;
+  }
+
+  h3 {
+    font-size: 0.5rem;
+  }
+
+  /* Dialog boxes - smaller corners for mobile */
+  .dialog-box {
+    margin-left: 0;
+    margin-right: 0;
+    border-width: 3px;
+    box-shadow:
+      inset 3px 3px 0 0 var(--border-highlight),
+      inset -3px -3px 0 0 var(--border-outer);
+  }
+
+  .dialog-box::before,
+  .dialog-box::after {
+    width: 5px;
+    height: 5px;
+  }
+
+  /* Code blocks - ensure readable on small screens */
+  pre {
+    padding: var(--space-xs);
+    font-size: 0.8rem;
+    border-radius: 0;
+  }
+
+  pre code {
+    font-size: 0.8rem;
+  }
+
+  /* Inline code - readable size (at least 16px equivalent) */
+  code {
+    font-size: 1rem;
+    padding: 0.15em 0.3em;
+  }
+
+  /* Tags - maintain touch target */
+  .tag {
+    font-size: 0.45rem;
+    padding: 12px 16px;
+  }
+
+  /* Quest metadata - stack vertically */
+  .quest-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .quest-stat {
+    font-size: 0.45rem;
+  }
+
+  /* Status bars */
+  .stat-bar-label {
+    font-size: 0.35rem;
+  }
+
+  /* Images - full width */
+  img {
+    margin-left: 0;
+    margin-right: 0;
+    border-width: 2px;
+    box-shadow:
+      2px 2px 0 0 var(--border-outer),
+      0 0 10px rgba(0, 245, 212, 0.1);
+  }
+
+  /* Blockquotes - adjust for small screens */
+  blockquote {
+    margin-left: 0;
+    margin-right: 0;
+    padding: var(--space-sm);
+  }
+
+  blockquote::before {
+    font-size: 1.5rem;
+    top: -8px;
+    left: 8px;
+  }
+
+  /* Lists - reduce indentation */
+  ul, ol {
+    padding-left: var(--space-md);
+  }
+
+  /* Horizontal rules */
+  hr {
+    margin: var(--space-lg) 0;
+  }
+
+  /* Scrollbar - thinner on mobile */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  /* Progress bar - thinner on mobile */
+  .progress-bar {
+    height: 3px;
+  }
+
+  /* Navigation - smaller gap */
+  .nav-list {
+    gap: var(--space-sm);
+  }
+
+  /* Footer links - wrap better */
+  .footer-links {
+    gap: var(--space-sm);
   }
 }
 
@@ -943,4 +1144,29 @@ main {
 
 .footer-link:hover {
   color: var(--cyan-glow);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CUSTOM PIXEL CURSORS
+   RPG-style pixel art cursors matching the cyberpunk theme
+═══════════════════════════════════════════════════════════════ */
+@media (pointer: fine) {
+  /* Default pointer: 16x16 pixel arrow in cyan */
+  body {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%2300f5d4' d='M0 0h2v2H0zM2 2h2v2H2zM4 4h2v2H4zM6 6h2v2H6zM8 8h2v2H8zM2 4h2v2H2zM2 6h2v2H2zM2 8h2v2H2zM2 10h2v2H2zM2 12h2v2H2zM4 10h2v2H4zM6 8h2v2H6zM8 10h2v2H8zM10 12h2v2h-2z'/%3E%3Cpath fill='%230a8f7f' d='M4 6h2v2H4zM4 8h2v2H4zM6 10h2v2H6z'/%3E%3C/svg%3E") 0 0, auto;
+  }
+
+  /* Hand/link pointer: pixel hand in pink for interactive elements */
+  a,
+  button,
+  [role="button"],
+  .tag,
+  .nav-link,
+  .quest-item,
+  input[type="submit"],
+  input[type="button"],
+  select,
+  summary {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23ff3c7d' d='M6 0h2v2H6zM6 2h2v2H6zM6 4h2v2H6zM6 6h2v2H6zM4 8h2v2H4zM2 8h2v2H2zM0 8h2v2H0zM0 10h2v2H0zM2 10h2v2H2zM4 10h2v2H4zM6 8h2v2H6zM8 6h2v2H8zM8 8h2v2H8zM10 6h2v2h-2zM10 8h2v2h-2zM12 6h2v2h-2zM12 8h2v2h-2zM0 12h2v2H0zM2 12h2v2H2zM4 12h2v2H4zM6 10h2v2H6zM8 10h2v2H8zM10 10h2v2h-2zM12 10h2v2h-2zM2 14h2v2H2zM4 14h2v2H4zM6 12h2v2H6zM8 12h2v2H8zM10 12h2v2h-2z'/%3E%3Cpath fill='%23a32854' d='M6 10h2v2H6zM8 14h2v2H8z'/%3E%3C/svg%3E") 6 0, pointer;
+  }
 }

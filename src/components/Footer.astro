@@ -110,13 +110,53 @@ const currentYear = new Date().getFullYear();
     }
   }
 
-  @media (max-width: 640px) {
+  /* Tablet breakpoint */
+  @media (max-width: 768px) {
     .footer-links {
       gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    /* Ensure 44px touch targets */
+    .footer-link {
+      font-size: 0.7rem;
+      padding: 10px 12px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    footer {
+      padding: var(--space-md) 0;
+    }
+
+    .save-point {
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    .save-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .save-text {
+      font-size: 0.6rem;
+    }
+
+    .footer-links {
+      gap: var(--space-xs);
     }
 
     .footer-link {
-      font-size: 0.7rem;
+      font-size: 0.6rem;
+      padding: 12px 10px;
+    }
+
+    .copyright {
+      font-size: 0.6rem;
     }
   }
 </style>

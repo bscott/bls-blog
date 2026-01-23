@@ -312,4 +312,102 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         inset -2px -2px 0 0 rgba(0, 0, 0, 0.2);
     }
   }
+
+  /* Tablet breakpoint */
+  @media (max-width: 768px) {
+    .search-panel {
+      padding: var(--space-md);
+    }
+
+    /* Ensure touch targets for navigation */
+    .nav-link {
+      padding: 10px 16px;
+      min-height: 44px;
+    }
+
+    .nav-links {
+      gap: var(--space-md);
+    }
+
+    /* Pagefind UI adjustments for tablet */
+    :global(.pagefind-ui__search-input) {
+      padding: 12px 16px !important;
+      min-height: 44px !important;
+      font-size: 16px !important; /* Prevents iOS zoom */
+    }
+
+    :global(.pagefind-ui__button) {
+      padding: 10px 16px !important;
+      min-height: 44px !important;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    .search-screen {
+      padding: 0;
+    }
+
+    .screen-header {
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+    }
+
+    .screen-header h1 {
+      font-size: 1rem;
+    }
+
+    .screen-subtitle {
+      font-size: 0.6rem;
+    }
+
+    .search-panel {
+      padding: var(--space-sm);
+    }
+
+    .search-label {
+      font-size: 0.75rem;
+    }
+
+    .search-hint {
+      font-size: 0.75rem;
+    }
+
+    .tips-title {
+      font-size: 0.75rem;
+    }
+
+    .tips-list li {
+      font-size: 1rem; /* Ensure minimum 16px readability */
+    }
+
+    .nav-label {
+      font-size: 0.65rem;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .nav-link {
+      font-size: 0.8rem;
+      padding: 12px 20px;
+      min-height: 44px;
+    }
+
+    /* Pagefind UI adjustments for mobile */
+    :global(.pagefind-ui__result) {
+      padding: var(--space-sm) !important;
+    }
+
+    :global(.pagefind-ui__result-link) {
+      font-size: 0.85rem !important;
+    }
+
+    :global(.pagefind-ui__result-excerpt) {
+      font-size: 1rem !important; /* Ensure minimum 16px readability */
+    }
+  }
 </style>

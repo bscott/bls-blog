@@ -162,9 +162,117 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     gap: var(--space-md);
   }
 
-  @media (max-width: 700px) {
+  /* Tablet breakpoint - single column */
+  @media (max-width: 768px) {
     .status-grid {
       grid-template-columns: 1fr;
+      gap: var(--space-sm);
+    }
+
+    .dialog-box {
+      padding: var(--space-sm);
+    }
+
+    /* Ensure touch targets for equipment links */
+    .equipment-item {
+      padding: 10px 0;
+      min-height: 44px;
+    }
+
+    .item-link {
+      padding: 8px 0;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 480px) {
+    .status-screen {
+      padding: 0;
+    }
+
+    .screen-header {
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+    }
+
+    .screen-header h1 {
+      font-size: 1rem;
+    }
+
+    .screen-subtitle {
+      font-size: 0.6rem;
+    }
+
+    .panel-title {
+      font-size: 0.7rem;
+    }
+
+    /* Stat rows - stack on very small screens */
+    .stat-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+    }
+
+    .stat-value {
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .character-class {
+      font-size: 0.65rem;
+    }
+
+    .character-bio {
+      font-size: 1rem; /* Ensure minimum 16px readability */
+    }
+
+    /* Equipment panel */
+    .item-slot {
+      font-size: 0.5rem;
+      min-width: 44px;
+    }
+
+    .item-link {
+      font-size: 0.7rem;
+    }
+
+    /* Abilities panel */
+    .ability-header {
+      font-size: 0.55rem;
+    }
+
+    .ability-name {
+      font-size: 0.65rem;
+      min-width: 80px;
+    }
+
+    .passive-list li {
+      font-size: 1rem; /* Ensure minimum 16px readability */
+    }
+
+    /* Realm description */
+    .realm-description {
+      font-size: 1rem; /* Ensure minimum 16px readability */
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      font-size: 0.9rem;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .disclaimer-icon {
+      align-self: flex-start;
     }
   }
 
