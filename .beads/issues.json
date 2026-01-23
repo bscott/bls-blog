@@ -1,6 +1,6 @@
 {
   "prefix": "blog",
-  "nextId": 12,
+  "nextId": 18,
   "issues": [
     {
       "id": "blog-1",
@@ -98,6 +98,60 @@
       "description": "Delete the 3 placeholder posts (welcome, building-with-astro, retro-web-design) after importing real content",
       "status": "closed",
       "priority": "medium",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-12",
+      "title": "Add custom pixel cursors",
+      "description": "Add custom pixel art cursors to match RPG theme. Default pointer and hand cursor for links.",
+      "status": "closed",
+      "priority": "low",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-13",
+      "title": "Add 8-bit sound effects",
+      "description": "Optional sound effects system with toggle. Menu hover blips, click sounds, page load chime. OFF by default, respects prefers-reduced-motion.",
+      "status": "closed",
+      "priority": "low",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-14",
+      "title": "Add Konami code easter egg",
+      "description": "Hidden easter egg triggered by Konami code (↑↑↓↓←→←→BA). Shows Game Boy color flash, CHEAT ACTIVATED text, unlocks persistent badge.",
+      "status": "closed",
+      "priority": "low",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-15",
+      "title": "Draft new blog posts",
+      "description": "Create draft outlines for: Claude Code workflow, Homelab setup 2026, Obsidian workflow. Set draft: true.",
+      "status": "closed",
+      "priority": "medium",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-16",
+      "title": "Mobile optimization",
+      "description": "Ensure all pages are fully optimized for mobile: touch targets, font sizes, responsive layouts, no horizontal scroll.",
+      "status": "closed",
+      "priority": "high",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-17",
+      "title": "Deploy Cloudflare Pages with GitHub Actions",
+      "description": "Set up automated deployment via GitHub Actions with Cloudflare API token. Custom domain brianlscott.com.",
+      "status": "closed",
+      "priority": "high",
       "created": "2026-01-22",
       "closed": "2026-01-22"
     }
