@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://yourdomain.com', // Update with your actual domain
+  site: 'https://brianlscott.com',
   integrations: [mdx(), sitemap()],
   image: {
     // Use Sharp for image optimization (Astro's default)
