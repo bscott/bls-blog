@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentSlug: string;
+  tags: string[];
+  limit?: number;
+}
+
+const { currentSlug, tags, limit = 3 } = Astro.props;
+
+// Get all non-draft posts
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Find related posts based on matching tags
+const relatedPosts = allPosts
+  .filter(post => post.slug !== currentSlug) // Exclude current post
+  .map(post => {
+    // Count matching tags
+    const matchingTags = post.data.tags.filter(tag => tags.includes(tag)).length;
+    return { post, matchingTags };
+  })
+  .filter(({ matchingTags }) => matchingTags > 0) // Only posts with at least one matching tag
+  .sort((a, b) => {
+    // Sort by number of matching tags (descending), then by date (descending)
+    if (b.matchingTags !== a.matchingTags) {
+      return b.matchingTags - a.matchingTags;
+    }
+    return b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf();
+  })
+  .slice(0, limit)
+  .map(({ post }) => post);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+---
+
+{relatedPosts.length > 0 && (
+  <aside class="related-posts">
+    <h2>Related Posts</h2>
+    <ul>
+      {relatedPosts.map(post => (
+        <li>
+          <a href={`/blog/${post.slug}`}>[{post.data.title}]</a>
+          <time datetime={post.data.pubDate.toISOString()}>
+            {formatDate(post.data.pubDate)}
+          </time>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
+
+<style>
+  .related-posts {
+    margin-top: var(--space-xl);
+    padding: var(--space-md);
+    background-color: var(--color-code-bg);
+    border-left: 3px solid var(--color-border);
+  }
+
+  .related-posts h2 {
+    font-size: var(--text-base);
+    margin-top: 0;
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .related-posts ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .related-posts li {
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .related-posts li:last-child {
+    margin-bottom: 0;
+  }
+
+  .related-posts a {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .related-posts a:hover {
+    text-decoration: underline;
+  }
+
+  .related-posts a:visited {
+    color: var(--color-text);
+  }
+
+  .related-posts time {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .related-posts {
+      padding: var(--space-sm);
+    }
+  }
+</style>

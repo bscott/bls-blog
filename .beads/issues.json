@@ -1,0 +1,105 @@
+{
+  "prefix": "blog",
+  "nextId": 12,
+  "issues": [
+    {
+      "id": "blog-1",
+      "title": "Import blog posts from brianlscott.com",
+      "description": "Migrate existing blog posts: My Backup Strategy, Building an Automated Weekly Reflection System, Securing Your Home Lab",
+      "status": "closed",
+      "priority": "high",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-2",
+      "title": "Add dark mode support",
+      "description": "Implement CSS custom properties toggle for prefers-color-scheme media query. Zero JS approach.",
+      "status": "closed",
+      "priority": "high",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-3",
+      "title": "Add SEO meta tags",
+      "description": "Add Open Graph and Twitter Card meta tags for social sharing",
+      "status": "closed",
+      "priority": "high",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-4",
+      "title": "Create 404 page",
+      "description": "Create src/pages/404.astro for better user experience on missing pages",
+      "status": "closed",
+      "priority": "medium",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-5",
+      "title": "Add pagination to blog listing",
+      "description": "Implement pagination on /blog page for when posts grow beyond 10-15 items",
+      "status": "closed",
+      "priority": "medium",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-6",
+      "title": "Add client-side search",
+      "description": "Implement Pagefind for zero-JS static search functionality",
+      "status": "closed",
+      "priority": "medium",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-7",
+      "title": "Configure syntax highlighting theme",
+      "description": "Configure Shiki theme in astro.config.mjs for code blocks",
+      "status": "closed",
+      "priority": "low",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-8",
+      "title": "Add related posts component",
+      "description": "Show posts with matching tags at the end of blog articles",
+      "status": "closed",
+      "priority": "low",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-9",
+      "title": "Add image optimization",
+      "description": "Install and configure @astrojs/image for automatic image optimization",
+      "status": "closed",
+      "priority": "low",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-10",
+      "title": "Update About page with real content",
+      "description": "Update about page with Brian's real bio and social links from brianlscott.com",
+      "status": "closed",
+      "priority": "medium",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    },
+    {
+      "id": "blog-11",
+      "title": "Remove placeholder blog posts",
+      "description": "Delete the 3 placeholder posts (welcome, building-with-astro, retro-web-design) after importing real content",
+      "status": "closed",
+      "priority": "medium",
+      "created": "2026-01-22",
+      "closed": "2026-01-22"
+    }
+  ]
+}

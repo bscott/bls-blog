@@ -1,0 +1,73 @@
+---
+// OptimizedImage.astro - Wrapper for Astro's built-in image optimization
+//
+// Usage in blog posts (MDX) or pages:
+//
+// 1. Import the component and your image:
+//    import OptimizedImage from '../components/OptimizedImage.astro';
+//    import myImage from '../assets/my-image.jpg';
+//
+// 2. Use with imported image (recommended for local images):
+//    <OptimizedImage src={myImage} alt="Description of image" />
+//
+// 3. With explicit dimensions (overrides intrinsic size):
+//    <OptimizedImage src={myImage} alt="Description" width={800} height={600} />
+//
+// 4. Remote images (must specify width/height):
+//    <OptimizedImage src="https://example.com/image.jpg" alt="Description" width={800} height={600} />
+//
+// 5. With custom class for styling:
+//    <OptimizedImage src={myImage} alt="Description" class="hero-image" />
+//
+// Supported formats: jpg, jpeg, png, gif, webp, avif, svg
+// Output formats: webp (default), avif (for supported browsers)
+
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata | string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'auto' | 'sync';
+  format?: 'webp' | 'avif' | 'png' | 'jpg' | 'jpeg' | 'gif';
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  class: className,
+  loading = 'lazy',
+  decoding = 'async',
+  format = 'webp',
+} = Astro.props;
+
+// For remote images, width and height are required
+const isRemote = typeof src === 'string' && src.startsWith('http');
+if (isRemote && (!width || !height)) {
+  throw new Error('Remote images require explicit width and height props');
+}
+---
+
+<Image
+  src={src}
+  alt={alt}
+  width={width}
+  height={height}
+  class={className}
+  loading={loading}
+  decoding={decoding}
+  format={format}
+/>
+
+<style>
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+</style>

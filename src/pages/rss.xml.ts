@@ -12,8 +12,8 @@ export async function GET(context: APIContext) {
   );
 
   return rss({
-    title: 'bscott blog',
-    description: 'A minimalist blog with a retro-web aesthetic',
+    title: "Brian's Tech Ramblings",
+    description: 'Tech ramblings, home lab adventures, and thoughts on productivity and automation',
     site: context.site?.toString() || 'https://yourdomain.com',
     items: sortedPosts.map((post) => ({
       title: post.data.title,

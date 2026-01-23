@@ -7,9 +7,16 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://yourdomain.com', // Update with your actual domain
   integrations: [mdx(), sitemap()],
+  image: {
+    // Use Sharp for image optimization (Astro's default)
+    service: { entrypoint: 'astro/assets/services/sharp' },
+  },
   markdown: {
     shikiConfig: {
-      theme: 'github-light', // Light theme for retro aesthetic
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
       wrap: true,
     },
   },

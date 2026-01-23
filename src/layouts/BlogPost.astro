@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import TableOfContents, { type Heading } from '../components/TableOfContents.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
 import { getReadingTime } from '../utils/readingTime';
 
 interface Props {
@@ -11,9 +12,10 @@ interface Props {
   tags: string[];
   headings: Heading[];
   body: string;
+  slug: string;
 }
 
-const { title, description, pubDate, updatedDate, tags, headings, body } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, headings, body, slug } = Astro.props;
 
 const readingTime = getReadingTime(body);
 
@@ -26,7 +28,7 @@ function formatDate(date: Date): string {
 }
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} ogType="article">
   <article class="blog-post">
     <header class="post-header">
       <h1>{title}</h1>
@@ -62,6 +64,10 @@ function formatDate(date: Date): string {
           <a href={`/blog/tags/${tag}`}>[{tag}]</a>
         )).reduce((prev, curr) => [prev, ', ', curr] as any)}</p>
       </footer>
+    )}
+
+    {tags.length > 0 && (
+      <RelatedPosts currentSlug={slug} tags={tags} />
     )}
   </article>
 </BaseLayout>

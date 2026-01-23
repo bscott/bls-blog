@@ -1,16 +1,31 @@
 ---
+import type { GetStaticPaths, Page } from 'astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-// Get all blog posts, sort by date, filter out drafts
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  // Get all blog posts, filter out drafts, sort by date
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.draft !== true;
+  });
+
+  const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  // Generate paginated pages (10 posts per page)
+  return paginate(posts, { pageSize: 10 });
+};
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+
+// Get all unique tags from ALL posts (not just current page)
 const allPosts = await getCollection('blog', ({ data }) => {
   return data.draft !== true;
 });
-
-const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-// Get all unique tags
-const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
@@ -22,7 +37,7 @@ function formatDate(date: Date): string {
 ---
 
 <BaseLayout
-  title="Blog"
+  title={page.currentPage === 1 ? "Blog" : `Blog - Page ${page.currentPage}`}
   description="All blog posts"
 >
   <h1>Blog</h1>
@@ -39,11 +54,11 @@ function formatDate(date: Date): string {
   )}
 
   <section class="posts-section">
-    {posts.length === 0 ? (
+    {page.data.length === 0 ? (
       <p>No posts yet. Check back soon!</p>
     ) : (
       <ul class="post-list">
-        {posts.map(post => (
+        {page.data.map((post: any) => (
           <li>
             <article>
               <h2>
@@ -55,7 +70,7 @@ function formatDate(date: Date): string {
               <p>{post.data.description}</p>
               {post.data.tags.length > 0 && (
                 <div class="tags">
-                  {post.data.tags.map(tag => (
+                  {post.data.tags.map((tag: string) => (
                     <a href={`/blog/tags/${tag}`} class="tag">[{tag}]</a>
                   ))}
                 </div>
@@ -66,6 +81,27 @@ function formatDate(date: Date): string {
       </ul>
     )}
   </section>
+
+  {/* Pagination Navigation */}
+  {page.lastPage > 1 && (
+    <nav class="pagination" aria-label="Blog pagination">
+      <div class="pagination-links">
+        {page.url.prev ? (
+          <a href={page.url.prev} class="pagination-link">[&larr; Newer]</a>
+        ) : (
+          <span class="pagination-link disabled">[&larr; Newer]</span>
+        )}
+
+        <span class="pagination-info">Page {page.currentPage} of {page.lastPage}</span>
+
+        {page.url.next ? (
+          <a href={page.url.next} class="pagination-link">[Older &rarr;]</a>
+        ) : (
+          <span class="pagination-link disabled">[Older &rarr;]</span>
+        )}
+      </div>
+    </nav>
+  )}
 </BaseLayout>
 
 <style>
@@ -147,5 +183,46 @@ function formatDate(date: Date): string {
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: var(--space-sm);
+  }
+
+  /* Pagination Styles */
+  .pagination {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .pagination-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .pagination-link {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .pagination-link:hover {
+    text-decoration: underline;
+  }
+
+  .pagination-link.disabled {
+    color: var(--color-text-muted);
+  }
+
+  .pagination-info {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .pagination-links {
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
   }
 </style>
