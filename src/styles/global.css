@@ -122,18 +122,20 @@ html::after {
 
 html::before {
   left: 0;
+  opacity: 0.4;
 }
 
 html::after {
   right: 0;
   transform: scaleX(-1);
+  opacity: 0.4;
 }
 
 /* Hide side decorations on smaller screens */
 @media (max-width: 1400px) {
   html::before,
   html::after {
-    opacity: 0.08;
+    opacity: 0.25;
   }
 }
 
