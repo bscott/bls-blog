@@ -71,6 +71,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <span class="item-icon">*</span> RSS Crystal
             </a>
           </li>
+          <li class="equipment-item">
+            <span class="item-slot">MAIL</span>
+            <span class="item-link email-obfuscated">
+              <span class="item-icon">*</span> brian<span class="at">[at]</span>byte-mail<span class="dot">[dot]</span>xyz
+            </span>
+          </li>
         </ul>
       </section>
 
@@ -400,6 +406,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .item-icon {
     color: var(--color-text-muted);
+  }
+
+  /* Email obfuscation */
+  .email-obfuscated {
+    cursor: default;
+  }
+
+  .email-obfuscated .at,
+  .email-obfuscated .dot {
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    margin: 0 1px;
   }
 
   /* Abilities Panel */
