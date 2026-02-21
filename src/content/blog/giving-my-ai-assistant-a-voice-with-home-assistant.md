@@ -114,14 +114,14 @@ A scheduled summary of what happened overnight — new saves, completed tasks, a
 
 Here's how all the pieces connect:
 
-```
-┌──────────────┐     ┌──────────────┐     ┌─────────────────┐
-│   OpenClaw   │────▶│    Home      │────▶│  HA Voice       │
-│   (Cosmo)    │ API │  Assistant   │ TTS │  Speakers       │
-│              │     │              │     │  🔊 Bedroom     │
-│  Lab Server  │     │  (Tailscale) │     │  🔊 Gaming Room │
-│              │     │              │     │                 │
-└──────────────┘     └──────────────┘     └─────────────────┘
+```text
+┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
+│   OpenClaw   │────▶│     Home     │────▶│    HA Voice      │
+│   (Cosmo)    │ API │   Assistant  │ TTS │    Speakers      │
+│              │     │              │     │  🔊 Bedroom      │
+│  Lab Server  │     │ (Tailscale)  │     │  🔊 Gaming Room  │
+│              │     │              │     │                  │
+└──────────────┘     └──────────────┘     └──────────────────┘
 ```
 
 Everything communicates over my Tailscale network — encrypted, no ports exposed to the internet. The HA Voice speakers connect to Home Assistant locally over WiFi, and Cosmo reaches HA via its Tailscale address.

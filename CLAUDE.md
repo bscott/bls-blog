@@ -74,8 +74,40 @@ draft: false
 
 - **Vanilla CSS**: No frameworks, all styles in `src/styles/global.css`
 - **CSS Variables**: Colors, fonts, spacing defined in `:root`
-- **Retro Aesthetic**: Classic blue links (#0000ff), system fonts, ASCII brackets, high contrast
+- **Cyberpunk RPG Aesthetic**: Cyan/pink/gold accents, dark backgrounds, pixel fonts for headings, FF-style dialog boxes
 - **Scoped Styles**: Component-specific styles use Astro's `<style>` blocks
+
+## Code Block Style Guide
+
+Code blocks use **Shiki** syntax highlighting with the `tokyo-night` theme for readable, high-contrast code on the dark background.
+
+### Fenced Code Block Rules
+
+**Always specify a language hint** on every fenced code block. Never use bare ` ``` ` — Shiki will auto-detect and miscolor content.
+
+| Content Type | Language Hint | Example |
+|---|---|---|
+| Shell commands | `bash` | ` ```bash ` |
+| YAML config | `yaml` | ` ```yaml ` |
+| JSON | `json` | ` ```json ` |
+| JavaScript/TypeScript | `javascript` / `typescript` | ` ```javascript ` |
+| Markdown content | `markdown` | ` ```markdown ` |
+| ASCII diagrams | `text` | ` ```text ` |
+| Directory trees | `text` | ` ```text ` |
+| Plain output / logs | `text` | ` ```text ` |
+
+### ASCII Diagrams
+
+- Use `text` language hint so diagrams render as plain white text (no syntax coloring)
+- Use a true monospace font for alignment — the CSS uses SF Mono/Monaco/Cascadia Code (`--font-mono`)
+- Ensure consistent line widths: all lines in a box diagram must have the same character count
+- Test diagram alignment in the browser before committing (VT323 and other display fonts break box-drawing alignment)
+
+### Fonts
+
+- **Code blocks** (`pre`, `pre code`): `--font-mono` (SF Mono, Monaco, Cascadia Code) — true monospace for alignment
+- **Inline code** (`code`): `--font-terminal` (VT323) — retro aesthetic for inline snippets
+- **Headings**: `--font-pixel` (Press Start 2P) — pixel art style
 
 ## Site Configuration
 

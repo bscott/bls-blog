@@ -328,25 +328,26 @@ li::marker {
 ═══════════════════════════════════════════════════════════════ */
 code {
   font-family: var(--font-terminal);
-  background-color: var(--bg-surface);
-  color: var(--hp-green);
+  background-color: rgba(26, 27, 46, 0.8);
+  color: var(--cyan-glow);
   padding: 0.2em 0.4em;
-  border: 1px solid var(--border-outer);
+  border: 1px solid var(--border-light);
   font-size: 1.1em;
+  border-radius: 3px;
 }
 
 pre {
-  font-family: var(--font-terminal);
-  background: linear-gradient(180deg, #0a0a1a 0%, #050510 100%);
+  font-family: var(--font-mono);
   padding: var(--space-md);
   border: 2px solid var(--border-light);
   box-shadow:
     inset 2px 2px 0 0 var(--border-highlight),
     inset -2px -2px 0 0 var(--border-outer),
-    0 0 20px rgba(57, 255, 20, 0.1);
+    0 0 20px rgba(0, 245, 212, 0.08);
   overflow-x: auto;
   margin-bottom: var(--space-md);
   position: relative;
+  border-radius: 4px;
 }
 
 /* Terminal header decoration */
@@ -355,25 +356,35 @@ pre::before {
   display: block;
   font-family: var(--font-pixel);
   font-size: 0.5rem;
-  color: var(--text-dim);
+  color: var(--text-secondary);
   margin-bottom: var(--space-sm);
   padding-bottom: var(--space-xs);
-  border-bottom: 1px dashed var(--border-outer);
+  border-bottom: 1px dashed var(--border-light);
 }
 
 pre code {
-  background-color: transparent;
+  font-family: var(--font-mono);
+  background-color: transparent !important;
   border: none;
   padding: 0;
-  color: var(--hp-green);
-  font-size: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
-/* Shiki syntax highlighting support - always dark theme */
-html .shiki,
-html .shiki span {
-  color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
+/* Shiki syntax highlighting - let the theme colors come through */
+pre.astro-code {
+  background-color: #1a1b2e !important;
+}
+
+/* Plain text / diagram blocks - use monospace with good contrast */
+pre.astro-code[data-language="text"] code,
+pre.astro-code[data-language="plaintext"] code {
+  color: var(--text-primary) !important;
+}
+
+pre.astro-code[data-language="text"] span,
+pre.astro-code[data-language="plaintext"] span {
+  color: var(--text-primary) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════

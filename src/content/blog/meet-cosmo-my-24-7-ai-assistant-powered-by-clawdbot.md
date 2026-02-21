@@ -30,24 +30,25 @@ What sold me: it's designed for self-hosters. No SaaS dependency, runs on your o
 
 I run Clawdbot on an Intel NUC (`omarchy-ser8`) in my homelab, connected via Tailscale for secure access from anywhere. Here's the high-level architecture:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        HOMELAB                               │
-│  ┌─────────────┐    ┌──────────────┐    ┌───────────────┐   │
-│  │   Clawdbot  │───▶│   Obsidian   │    │   Raindrop    │   │
-│  │   Gateway   │    │    Vault     │    │   (Bookmarks) │   │
-│  └──────┬──────┘    └──────────────┘    └───────────────┘   │
-│         │                                                    │
-│         │           ┌──────────────┐    ┌───────────────┐   │
-│         │           │   Forgejo    │    │ Home Assistant│   │
-│         │           │    (Git)     │    │               │   │
-│         │           └──────────────┘    └───────────────┘   │
-└─────────┼───────────────────────────────────────────────────┘
-          │
-          ▼
-    ┌───────────┐
-    │  Telegram │ ◀──── My Phone / Desktop
-    └───────────┘
+```text
+┌──────────────────────────────────────────────────────────┐
+│                        HOMELAB                           │
+│                                                          │
+│  ┌────────────┐   ┌────────────┐   ┌────────────────┐   │
+│  │  Clawdbot  │──▶│  Obsidian  │   │    Raindrop    │   │
+│  │  Gateway   │   │   Vault    │   │   (Bookmarks)  │   │
+│  └─────┬──────┘   └────────────┘   └────────────────┘   │
+│        │                                                 │
+│        │          ┌────────────┐   ┌────────────────┐   │
+│        │          │  Forgejo   │   │ Home Assistant  │   │
+│        │          │   (Git)    │   │                 │   │
+│        │          └────────────┘   └────────────────┘   │
+└────────┼─────────────────────────────────────────────────┘
+         │
+         ▼
+   ┌───────────┐
+   │  Telegram  │ ◀──── My Phone / Desktop
+   └───────────┘
 ```
 
 ### Core Configuration
@@ -73,7 +74,7 @@ defaultModel: anthropic/claude-sonnet-4-20250514
 
 The workspace lives in `~/clawd` with a simple structure:
 
-```
+```text
 ~/clawd/
 ├── AGENTS.md      # Workspace rules and behaviors
 ├── IDENTITY.md    # Agent persona definition
