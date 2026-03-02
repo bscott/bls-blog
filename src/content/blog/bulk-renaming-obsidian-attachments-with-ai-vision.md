@@ -1,102 +1,108 @@
 ---
 title: "Bulk Renaming Obsidian Attachments with AI Vision"
-description: "Using Claude Code, Ollama, and the Obsidian CLI to turn cryptic attachment names into descriptive ones automatically"
+description: "How I turned cryptic Pasted Image filenames into descriptive ones using Claude Code's vision, the Obsidian CLI, and a reusable skill"
 pubDate: 2026-03-01
-tags: ["obsidian", "automation", "ai", "ollama", "pkm"]
+tags: ["obsidian", "automation", "ai", "claude-code", "pkm"]
 draft: false
 ---
 
 If you've used Obsidian for any length of time, you know the pain. Your attachments folder is a graveyard of `Pasted image 20241127231025.png` and `CleanShot 2025-01-19 at 13.12.18@2x.png`. These names tell you absolutely nothing about what's in the image. When you're searching for a specific screenshot or trying to understand what's embedded in a note, you're stuck opening each one.
 
-I decided to fix this for my entire vault, all at once.
+I decided to fix this for my entire vault, and then make it repeatable.
 
 ## The Goal
 
-Rename every poorly-named attachment to something descriptive and human-readable, like `Proxmox VM Dashboard.png` or `Kubernetes Cluster Diagram.png`, while preserving all of Obsidian's bidirectional wikilinks.
+Rename every poorly-named attachment to something descriptive and human-readable, like `kubernetes-pod-logs-terminal.png` or `strategic-thinking-7-mental-powers.png`, while preserving all of Obsidian's bidirectional wikilinks.
 
 The constraint: never touch the markdown files directly. All renames must go through the Obsidian CLI so links stay intact.
 
-## Building the Tracking Database
+## The First Attempt: Ollama Vision Pipeline
 
-Before renaming anything, I needed to know what I was working with. I built a JSON database that cataloged every attachment with its backlinks (which notes reference it), file type, and processing status.
+My initial approach was a Python script that used Ollama's vision API to analyze images locally. It loaded images as base64, sent them to Gemma 3 4B running on a homelab GPU via SSH tunnel, parsed the response into a filename, and called `obsidian rename`.
 
-![JSON database entry showing file metadata and backlinks](/images/obsidian-rename/json-database.png)
+It worked. I renamed 191 files in one batch. But the setup had friction: Ollama had to be running, the GPU box had to be online, the SSH tunnel had to be active, and large images occasionally caused HTTP 500 errors.
 
-Finding backlinks was straightforward with ripgrep:
+Before even getting to Ollama, I tried dispatching parallel Claude Code sub-agents to chew through batches simultaneously. That failed immediately because background sub-agents can't get interactive permission approval. Lesson learned.
 
-```bash
-rg -l "Pasted image 20260301143202" --type md
-```
+## The Realization: Claude Code Already Has Vision
 
-This gave me a full map of which notes reference which attachments. Files that already had descriptive names (game covers, named PDFs, etc.) were filtered out automatically.
+The breakthrough was obvious in hindsight. Claude Code is multimodal. It can read images natively with its Read tool. No API keys, no external models, no GPU tunnels. The image analysis that required an entire Ollama pipeline was already built into the tool I was using to orchestrate everything.
 
-## The Failed First Attempt: Parallel Sub-Agents
+The new approach:
 
-My first instinct was to split the work into batches and dispatch parallel Claude Code sub-agents to chew through them simultaneously.
+1. A Python finder script identifies generic-named images
+2. Claude reads each image visually (it just sees it)
+3. Claude generates a descriptive kebab-case filename
+4. Claude runs `obsidian rename` to execute the rename
 
-![Claude Code task list showing 8 parallel batch tasks](/images/obsidian-rename/task-list.png)
-
-Clean plan, eight parallel workers, each handling a batch of files. But background sub-agents can't get interactive permission approval for tools like file reads and shell commands. Every single one hit the same wall and bailed out immediately.
-
-Lesson learned: if your automation requires interactive approval, parallel agents won't help.
-
-## The Working Approach: Ollama Vision Pipeline
-
-Instead of reading images one-by-one through Claude Code (which burns context window fast), I wrote a Python script that uses Ollama's vision API to analyze images locally.
-
-The script follows a simple loop:
-
-1. Load the pending list from the JSON database
-2. Check if each file still exists (skip already-renamed ones)
-3. Send the image to Ollama's `/api/generate` endpoint, base64-encoded
-4. Parse the response into a clean filename
-5. Deduplicate names (append numbers for collisions)
-6. Call `obsidian rename` via subprocess
-7. Checkpoint progress every 10 files
-
-The prompt for the vision model was the critical piece:
-
-```text
-Describe this image in 3-7 words for use as a filename.
-Use Title Case. Be specific: mention the app/tool if it's a screenshot,
-describe the diagram topic if it's a diagram, describe the code purpose
-if it's code. Return ONLY the filename, nothing else.
-```
-
-I used Google's Gemma 3 4B model, which handles vision tasks well and runs comfortably on consumer hardware.
-
-## GPU Offload via SSH Tunnel
-
-My primary machine runs Ollama fine, but I have a homelab box with a dedicated GPU. Rather than reconfiguring network bindings, I set up a one-liner SSH tunnel:
-
-```bash
-ssh -f -N -L 11435:localhost:11434 gpu-host
-```
-
-The script pointed to `localhost:11435` and got GPU-accelerated inference. Each image took roughly 3-4 seconds to analyze, which made the whole batch finish in minutes rather than the hour it would take on CPU.
+No dependencies beyond Claude Code and Obsidian.
 
 ## The Obsidian CLI: The Real Hero
 
-The `obsidian rename` command does the heavy lifting here. When you run:
+The `obsidian rename` command does the heavy lifting. When you run:
 
 ```bash
 obsidian rename file="Pasted image 20260301143202.png" \
-  name="Anatomy of a Claude Prompt" vault="Personal"
+  name="anatomy-of-a-claude-prompt"
 ```
 
-It doesn't just rename the file. It finds every wikilink reference across the vault and updates them atomically. `![[Pasted image 20260301143202.png]]` becomes `![[Anatomy of a Claude Prompt.png]]` everywhere it appears.
+It doesn't just rename the file. It finds every wikilink reference across the vault and updates them atomically. `![[Pasted image 20260301143202.png]]` becomes `![[anatomy-of-a-claude-prompt.png]]` everywhere it appears. The CLI preserves the original extension, so you only pass the new base name.
 
 This is why the "never edit markdown directly" constraint matters. The CLI handles the graph-wide update that would be error-prone to do manually.
 
-## Handling Edge Cases
+## Packaging It as a Skill
 
-**PDFs** can't be sent to a vision model easily, so I fell back to context-based naming. The original filename, backlink location, and note title usually provide enough signal to generate a reasonable name.
+Since I paste screenshots into Obsidian constantly, this isn't a one-time task. New `Pasted image` files accumulate weekly. So I packaged the workflow as a [Claude Code skill](https://github.com/bscott/claude-skills) called `image-renamer`.
 
-**Name collisions** happen when multiple screenshots show similar content. The script tracks all used names and appends incrementing numbers when needed.
+The skill has two parts:
 
-**Files in unexpected locations** were a surprise. Some attachments lived in `attachments/` or `Daily/attachments/` rather than the expected `System/Attachments/`. The Obsidian CLI resolves files by name (like wikilinks do), so it found and renamed them regardless of directory.
+**A finder script** (`scripts/rename_images.py`) that scans the attachments directory for generic filename patterns:
 
-**Ollama failures** on a couple of large images (HTTP 500) were logged in the database for manual retry later. The checkpoint system meant nothing was lost.
+```python
+GENERIC_PATTERNS = [
+    re.compile(r"^Pasted image \d+", re.IGNORECASE),
+    re.compile(r"^IMG_\d+", re.IGNORECASE),
+    re.compile(r"^Screenshot[ _]\d+", re.IGNORECASE),
+    re.compile(r"^CleanShot \d{4}-\d{2}-\d{2}", re.IGNORECASE),
+    re.compile(r"^Screen[ _]?Cap", re.IGNORECASE),
+    re.compile(r"^image[ _]?\d*\.", re.IGNORECASE),
+    re.compile(r"^[A-F0-9]{8}-[A-F0-9]{4}-", re.IGNORECASE),
+]
+```
+
+Run it to see what needs renaming:
+
+```bash
+python3 scripts/rename_images.py ~/Documents/ObsVaults/Personal/System/Attachments
+```
+
+**A SKILL.md** that teaches Claude the workflow: find the images, read them in batches of 3 with a 2-second sleep between batches (to manage API rate limits), generate descriptive kebab-case names, and rename via the Obsidian CLI.
+
+The naming rules are baked into the skill instructions:
+
+- Lowercase kebab-case only
+- Be specific to content, not generic
+- For UI screenshots, name the app or feature shown
+- For diagrams, name the concept illustrated
+- Append numeric suffix for name collisions
+
+## Running It Weekly
+
+The skill integrates into my weekly reflection workflow. Every Sunday when I review the week's notes, I run the image renamer as a cleanup step. It catches any new pasted images from the past seven days and gives them proper names.
+
+A typical weekly run looks like this:
+
+```
+| Original                           | New Name                              |
+|------------------------------------|---------------------------------------|
+| Pasted image 20250912195603.png    | strategic-thinking-7-mental-powers.png|
+| Pasted image 20250912195656.png    | work-boundaries-quote-john-castro.png |
+| Pasted image 20250912200721.png    | mind-traps-cognitive-distortions.png  |
+| Pasted image 20250912200951.png    | running-motivation-slow-run-quote.png |
+| image.jpg                          | atlas-paradox-olivie-blake-book.jpg   |
+```
+
+14 images renamed this week, zero generic names remaining, all wikilinks updated.
 
 ## Before and After
 
@@ -108,33 +114,35 @@ Before:
   72EC51BE-9D03-4F4C-97A3-325D65F81B80.png
 
 After:
-  Bloom's Taxonomy Diagram.png
-  Kubernetes Cluster Diagram.png
-  Caves of Qud Game Screenshot.png
-  Digital Fox Illustration.png
+  hyprmon-dual-monitor-config.png
+  leadership-qualities-infographic.png
+  happiness-chemicals-boost-chart.png
+  atlas-paradox-olivie-blake-book.jpg
 ```
 
-Every wikilink updated. No broken references. The vault is instantly more navigable.
+## What Changed from V1 to V2
 
-## What I'd Do Differently
+| Aspect | V1 (Ollama) | V2 (Claude Code Skill) |
+|--------|-------------|----------------------|
+| Vision model | Gemma 3 4B via Ollama | Claude Code's native vision |
+| Dependencies | Ollama, GPU, SSH tunnel | None (just Claude Code + Obsidian) |
+| Tracking | JSON database with checkpoints | Finder script + inline processing |
+| Naming style | Title Case | kebab-case |
+| Execution | One-time batch script | Reusable weekly skill |
+| Rate limiting | GPU-bound (~3-4s/image) | Batches of 3, 2s sleep between |
+| PDF handling | Context inference fallback | Same (vision for images only) |
 
-**Start with the script approach from the beginning.** I initially had Claude Code read and rename images one at a time, which works but eats context window fast. The Ollama script was the right call for batch processing.
-
-**Add a dry-run mode.** Being able to preview all proposed renames before executing would catch weird model outputs early.
-
-**Better PDF handling.** A dedicated PDF text extraction step would produce better names than context inference alone.
+The JSON tracking database from V1 was useful for the initial bulk rename of 191 files. For the ongoing weekly workflow of 5-15 images, the lighter skill approach is a better fit.
 
 ## The Stack
 
-- **Claude Code** for orchestration, script writing, and initial prototyping
-- **Ollama** with Gemma 3 4B for local vision inference
-- **Obsidian CLI** for link-safe renames
-- **Python** for the automation script
-- **SSH tunneling** for GPU offload
-- **restic** for pre-flight backup
+- **Claude Code** for vision analysis, orchestration, and the skill framework
+- **Obsidian CLI** (v1.12+) for link-safe renames
+- **Python** for the finder script
+- **Claude Code Skills** for packaging and reuse
 
 ## Takeaway
 
-The combination of a local vision model with a domain-specific CLI tool turned a tedious manual task into an automated pipeline. The key insight: use AI for what it's good at (understanding image content) and use purpose-built tools for what they're good at (safe file renaming with link preservation).
+The original Ollama pipeline was a solid solution for the initial bulk operation. But once I realized Claude Code already has multimodal vision built in, the external model infrastructure became unnecessary overhead. Packaging the workflow as a skill turned a one-time hack into a sustainable weekly habit.
 
-The JSON tracking database also means I can revert any rename if the AI got it wrong. So far, the descriptions have been surprisingly accurate.
+The key insight hasn't changed from V1: use AI for what it's good at (understanding image content) and use purpose-built tools for what they're good at (safe file renaming with link preservation). What changed is where the AI runs.
