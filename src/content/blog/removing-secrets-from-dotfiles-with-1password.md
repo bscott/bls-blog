@@ -19,8 +19,8 @@ Fair enough. My `.bashrc` had Backblaze B2 credentials and a restic password sit
 ```bash
 export RESTIC_PASSWORD=mySecretPassword
 export RESTIC_REPOSITORY=b2:mybucket:Backups
-export B2_ACCOUNT_ID="000ba16aa409a610000000001"
-export B2_ACCOUNT_KEY="K0000uZOfepcxHRFQKsgA85pF2n7MnU"
+export B2_ACCOUNT_ID="your-account-id-here"
+export B2_ACCOUNT_KEY="your-account-key-here"
 ```
 
 These had been there for months. They worked. But they were also in my dotfiles git repo, which meant every machine I provisioned got a copy, and every commit included them in the history.
