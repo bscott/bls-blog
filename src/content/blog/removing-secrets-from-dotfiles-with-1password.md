@@ -3,7 +3,7 @@ title: "Removing Secrets from Dotfiles with 1Password"
 description: "How I replaced hardcoded credentials in my bashrc with 1Password service accounts, setec, and automated provisioning"
 pubDate: 2026-03-17
 tags: ["security", "homelab", "devops", "1password", "tailscale"]
-draft: true
+draft: false
 ---
 
 I use [chezmoi](https://www.chezmoi.io/) to manage my dotfiles across multiple machines. It works great — until it catches you trying to commit API keys.
