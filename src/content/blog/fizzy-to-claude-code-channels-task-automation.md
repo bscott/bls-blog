@@ -163,6 +163,14 @@ The pattern is always the same: external event → webhook → channel server �
 
 **The research preview flag is verbose.** I'm looking forward to channels being a standard feature so the startup command is just `claude` with the MCP server configured.
 
+## This Post Was Written by a Card
+
+Here's the thing — this blog post you're reading was itself triggered by a Fizzy card. I created a card titled "Blog Update" with the description "Write a blog post about my Fizzy → Claude Code Channel interaction and setup." I dragged it from Maybe to Action.
+
+Nova received the webhook, cloned my blog repo, wrote this post in my blog's Astro format, built the site to verify it compiled, committed and pushed to GitHub, and Cloudflare auto-deployed it. Then Nova posted a comment on the Fizzy card with the live URL and closed the card.
+
+I didn't open a terminal. I didn't write a single line. I moved a card.
+
 ## Wrapping Up
 
 Channels turn Claude Code from a tool you talk to into an assistant that reacts to your systems. Fizzy gives it a visual task board. Together, they create a loop where I can manage tasks from my phone (via Fizzy's mobile UI), and Nova handles the execution on my homelab.
