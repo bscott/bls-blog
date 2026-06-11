@@ -3,528 +3,60 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Status"
+  title="About"
   description="About Brian Scott - Father, Leader, TechExec, Inventor, Technologist & Writer"
 >
-  <div class="status-screen">
-    <div class="screen-header">
-      <h1>STATUS SCREEN</h1>
-      <span class="screen-subtitle">~ ADVENTURER PROFILE ~</span>
-    </div>
+  <h1>About</h1>
 
-    <div class="status-grid">
-      <!-- Character Info Panel -->
-      <section class="dialog-box character-panel">
-        <h2 class="panel-title">BRIAN SCOTT</h2>
-        <div class="character-class">LVL 99 TECHNOLOGIST</div>
+  <p>
+    I'm Brian Scott &mdash; father, leader, tech executive, inventor, and writer.
+    With a background in engineering leadership, DevOps, and SRE&mdash;plus
+    hands-on software development&mdash;I've spent my career building reliable
+    systems and teams. I hold patents and have authored publications in the
+    field. This is my space for tech ramblings, home lab adventures, and
+    thoughts on productivity and automation.
+  </p>
 
-        <div class="stat-row">
-          <span class="stat-label">CLASS</span>
-          <span class="stat-value">Tech Executive</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">TITLE</span>
-          <span class="stat-value">Father, Leader, Inventor, Writer</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">BACKGROUND</span>
-          <span class="stat-value">Leadership, DevOps, SRE, Software Dev</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">QUEST</span>
-          <span class="stat-value">Tech ramblings & home lab adventures</span>
-        </div>
+  <h2>Elsewhere</h2>
+  <ul>
+    <li><a href="https://bsky.app/profile/bscott.social">Bluesky</a></li>
+    <li><a href="https://hachyderm.io/@bscott">Mastodon</a></li>
+    <li><a href="https://linkedin.com/in/brianlscott/">LinkedIn</a></li>
+    <li><a href="/rss.xml">RSS feed</a></li>
+    <li class="email">Email: brian<span class="ob">[at]</span>byte-mail<span class="ob">[dot]</span>xyz</li>
+  </ul>
 
-        <p class="character-bio">
-          With a background in engineering leadership, DevOps, and SRE—plus hands-on software development—I've
-          spent my career building reliable systems and teams. I hold patents and have authored publications
-          in the field. This is my space for tech ramblings, home lab adventures, and thoughts on
-          productivity and automation.
-        </p>
-      </section>
+  <h2>About this site</h2>
+  <p>
+    This blog is built with <a href="https://astro.build">Astro</a>, a modern
+    static site generator that prioritizes performance and developer
+    experience. It uses vanilla CSS, system fonts (zero downloads), Markdown
+    content collections, and ships no JavaScript by default.
+  </p>
 
-      <!-- Equipped Items (Social Links) -->
-      <section class="dialog-box equipment-panel">
-        <h2 class="panel-title">EQUIPPED ITEMS</h2>
-        <ul class="equipment-list">
-          <li class="equipment-item">
-            <span class="item-slot">SOCIAL</span>
-            <a href="https://bsky.app/profile/bscott.social" class="item-link">
-              <span class="item-icon">*</span> Bluesky Badge
-            </a>
-          </li>
-          <li class="equipment-item">
-            <span class="item-slot">SOCIAL</span>
-            <a href="https://hachyderm.io/@bscott" class="item-link">
-              <span class="item-icon">*</span> Mastodon Amulet
-            </a>
-          </li>
-          <li class="equipment-item">
-            <span class="item-slot">SOCIAL</span>
-            <a href="https://linkedin.com/in/brianlscott/" class="item-link">
-              <span class="item-icon">*</span> LinkedIn Scroll
-            </a>
-          </li>
-          <li class="equipment-item">
-            <span class="item-slot">FEED</span>
-            <a href="/rss.xml" class="item-link">
-              <span class="item-icon">*</span> RSS Crystal
-            </a>
-          </li>
-          <li class="equipment-item">
-            <span class="item-slot">MAIL</span>
-            <span class="item-link email-obfuscated">
-              <span class="item-icon">*</span> brian<span class="at">[at]</span>byte-mail<span class="dot">[dot]</span>xyz
-            </span>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Abilities (Tech Stack) -->
-      <section class="dialog-box abilities-panel">
-        <h2 class="panel-title">ABILITIES & SKILLS</h2>
-        <div class="ability-category">
-          <h3 class="ability-header">FRAMEWORK MASTERY</h3>
-          <div class="ability-item">
-            <span class="ability-name">Astro</span>
-            <div class="ability-bar">
-              <div class="ability-fill" style="width: 95%;"></div>
-            </div>
-          </div>
-          <div class="ability-item">
-            <span class="ability-name">TypeScript</span>
-            <div class="ability-bar">
-              <div class="ability-fill" style="width: 90%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="ability-category">
-          <h3 class="ability-header">PASSIVE SKILLS</h3>
-          <ul class="passive-list">
-            <li><span class="passive-icon">+</span> Vanilla CSS (Zero Dependencies)</li>
-            <li><span class="passive-icon">+</span> Markdown/MDX Content Collections</li>
-            <li><span class="passive-icon">+</span> RSS Feed Generation</li>
-            <li><span class="passive-icon">+</span> Tag System & Search</li>
-            <li><span class="passive-icon">+</span> Reading Time Calculation</li>
-            <li><span class="passive-icon">+</span> Table of Contents</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Site Info Panel -->
-      <section class="dialog-box site-panel">
-        <h2 class="panel-title">REALM INFO</h2>
-        <p class="realm-description">
-          This blog is built with <a href="https://astro.build">Astro</a>, a modern static site generator
-          that prioritizes performance and developer experience.
-        </p>
-        <h3 class="ability-header">DESIGN PHILOSOPHY</h3>
-        <ul class="passive-list">
-          <li><span class="passive-icon">></span> RPG-inspired pixel aesthetic</li>
-          <li><span class="passive-icon">></span> FF-style dialog boxes</li>
-          <li><span class="passive-icon">></span> System fonts (zero downloads)</li>
-          <li><span class="passive-icon">></span> Generous whitespace</li>
-          <li><span class="passive-icon">></span> High contrast for accessibility</li>
-        </ul>
-      </section>
-    </div>
-
-    <div class="dialog-box disclaimer-box">
-      <p class="disclaimer">
-        <span class="disclaimer-icon">!</span>
-        This site/blog is of my own opinions and does not reflect the opinions/thoughts/endorsements
-        of my Employer, Friends or Family.
-      </p>
-    </div>
-  </div>
+  <p class="disclaimer">
+    This site/blog is of my own opinions and does not reflect the
+    opinions/thoughts/endorsements of my Employer, Friends or Family.
+  </p>
 </BaseLayout>
 
 <style>
-  .status-screen {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .screen-header {
-    text-align: center;
-    margin-bottom: var(--space-lg);
-    padding-bottom: var(--space-md);
-    border-bottom: 2px solid var(--color-border);
-  }
-
-  .screen-header h1 {
-    font-family: var(--font-mono);
-    font-size: 1.5rem;
-    color: var(--color-link);
-    margin: 0 0 var(--space-sm) 0;
-    letter-spacing: 2px;
-  }
-
-  .screen-subtitle {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    letter-spacing: 3px;
-  }
-
-  .status-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-md);
-  }
-
-  /* Tablet breakpoint - single column */
-  @media (max-width: 768px) {
-    .status-grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-sm);
-    }
-
-    .dialog-box {
-      padding: var(--space-sm);
-    }
-
-    /* Ensure touch targets for equipment links */
-    .equipment-item {
-      padding: 10px 0;
-      min-height: 44px;
-    }
-
-    .item-link {
-      padding: 8px 0;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-    }
-  }
-
-  /* Mobile breakpoint */
-  @media (max-width: 480px) {
-    .status-screen {
-      padding: 0;
-    }
-
-    .screen-header {
-      margin-bottom: var(--space-md);
-      padding-bottom: var(--space-sm);
-    }
-
-    .screen-header h1 {
-      font-size: 1rem;
-    }
-
-    .screen-subtitle {
-      font-size: 0.6rem;
-    }
-
-    .panel-title {
-      font-size: 0.7rem;
-    }
-
-    /* Stat rows - stack on very small screens */
-    .stat-row {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-      margin-bottom: 0.75rem;
-    }
-
-    .stat-label {
-      font-size: 0.6rem;
-    }
-
-    .stat-value {
-      text-align: left;
-      font-size: 0.85rem;
-    }
-
-    .character-class {
-      font-size: 0.65rem;
-    }
-
-    .character-bio {
-      font-size: 1rem; /* Ensure minimum 16px readability */
-    }
-
-    /* Equipment panel */
-    .item-slot {
-      font-size: 0.5rem;
-      min-width: 44px;
-    }
-
-    .item-link {
-      font-size: 0.7rem;
-    }
-
-    /* Abilities panel */
-    .ability-header {
-      font-size: 0.55rem;
-    }
-
-    .ability-name {
-      font-size: 0.65rem;
-      min-width: 80px;
-    }
-
-    .passive-list li {
-      font-size: 1rem; /* Ensure minimum 16px readability */
-    }
-
-    /* Realm description */
-    .realm-description {
-      font-size: 1rem; /* Ensure minimum 16px readability */
-    }
-
-    /* Disclaimer */
-    .disclaimer {
-      font-size: 0.9rem;
-      flex-direction: column;
-      gap: var(--space-xs);
-    }
-
-    .disclaimer-icon {
-      align-self: flex-start;
-    }
-  }
-
-  /* Dialog Box - FF-style pixel border */
-  .dialog-box {
-    position: relative;
-    background: var(--color-code-bg);
-    padding: var(--space-md);
-    border: 3px solid var(--color-border);
-    box-shadow:
-      inset 2px 2px 0 0 rgba(255, 255, 255, 0.1),
-      inset -2px -2px 0 0 rgba(0, 0, 0, 0.1);
-  }
-
-  .dialog-box::before,
-  .dialog-box::after {
-    content: "";
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: var(--color-link);
-  }
-
-  .dialog-box::before {
-    top: -3px;
-    left: -3px;
-  }
-
-  .dialog-box::after {
-    bottom: -3px;
-    right: -3px;
-  }
-
-  .panel-title {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    color: var(--color-link);
-    margin: 0 0 var(--space-md) 0;
-    padding-bottom: var(--space-sm);
-    border-bottom: 2px dashed var(--color-border);
-    letter-spacing: 1px;
-  }
-
-  /* Character Panel */
-  .character-class {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-md);
-    letter-spacing: 1px;
-  }
-
-  .stat-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .stat-label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
-    min-width: 60px;
-  }
-
-  .stat-value {
-    color: var(--color-text);
-    text-align: right;
-    flex: 1;
-  }
-
-  .character-bio {
+  h1 {
     margin-top: var(--space-md);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
   }
 
-  /* Equipment Panel */
-  .equipment-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .equipment-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .equipment-item:last-child {
-    border-bottom: none;
-  }
-
-  .item-slot {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--color-text-muted);
-    background: var(--color-border);
-    padding: 2px 6px;
-    min-width: 50px;
-    text-align: center;
-  }
-
-  .item-link {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    text-decoration: none;
-    color: var(--color-link);
-  }
-
-  .item-link:hover {
-    text-decoration: underline;
-  }
-
-  .item-icon {
-    color: var(--color-text-muted);
-  }
-
-  /* Email obfuscation */
-  .email-obfuscated {
-    cursor: default;
-  }
-
-  .email-obfuscated .at,
-  .email-obfuscated .dot {
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
-    margin: 0 1px;
-  }
-
-  /* Abilities Panel */
-  .ability-category {
-    margin-bottom: var(--space-md);
-  }
-
-  .ability-header {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
-    margin: 0 0 var(--space-sm) 0;
-    letter-spacing: 1px;
-  }
-
-  .ability-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    margin-bottom: 0.5rem;
-  }
-
-  .ability-name {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text);
-    min-width: 100px;
-  }
-
-  .ability-bar {
-    flex: 1;
-    height: 10px;
-    background: var(--color-border);
-    border: 1px solid var(--color-border);
-    position: relative;
-  }
-
-  .ability-fill {
-    height: 100%;
-    background: var(--color-link);
-  }
-
-  .passive-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .passive-list li {
-    font-size: 0.85rem;
-    padding: 0.25rem 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0;
-  }
-
-  .passive-icon {
-    font-family: var(--font-mono);
-    color: var(--color-link);
-    font-weight: bold;
-  }
-
-  /* Site Panel */
-  .realm-description {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-md);
-    line-height: 1.6;
-  }
-
-  .realm-description a {
-    color: var(--color-link);
-  }
-
-  /* Disclaimer */
-  .disclaimer-box {
-    margin-top: var(--space-lg);
+  .email .ob {
+    font-family: var(--font-sans);
+    font-size: 0.8em;
+    color: var(--ink-muted);
   }
 
   .disclaimer {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--rule);
     font-style: italic;
-    margin: 0;
-  }
-
-  .disclaimer-icon {
-    font-family: var(--font-mono);
-    color: var(--color-link);
-    font-weight: bold;
-    font-style: normal;
-  }
-
-  /* Dark mode adjustments */
-  @media (prefers-color-scheme: dark) {
-    .dialog-box {
-      box-shadow:
-        inset 2px 2px 0 0 rgba(255, 255, 255, 0.05),
-        inset -2px -2px 0 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .item-slot {
-      background: var(--color-border);
-    }
+    font-size: 0.88rem;
+    color: var(--ink-muted);
   }
 </style>
