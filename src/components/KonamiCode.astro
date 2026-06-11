@@ -51,7 +51,7 @@
   }
 
   .konami-text {
-    font-family: var(--font-pixel);
+    font-family: var(--font-pixel, var(--font-mono));
     font-size: clamp(1rem, 5vw, 2rem);
     color: #0f380f;
     text-shadow:
@@ -62,7 +62,7 @@
   }
 
   .konami-subtext {
-    font-family: var(--font-pixel);
+    font-family: var(--font-pixel, var(--font-mono));
     font-size: clamp(0.5rem, 2.5vw, 0.875rem);
     color: #306230;
     margin-top: 1rem;
@@ -104,7 +104,7 @@
   }
 
   .badge-text {
-    font-family: var(--font-pixel);
+    font-family: var(--font-pixel, var(--font-mono));
     font-size: 0.5rem;
     color: var(--gold-xp, #ffd700);
     text-transform: uppercase;
