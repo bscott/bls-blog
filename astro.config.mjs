@@ -13,7 +13,7 @@ export default defineConfig({
   },
   markdown: {
     shikiConfig: {
-      theme: 'tokyo-night',
+      theme: 'gruvbox-dark-medium',
       wrap: true,
     },
   },
