@@ -77,4 +77,16 @@ const navItems = [
     color: var(--ink);
     font-weight: 600;
   }
+
+  .nav-link.active:hover {
+    color: var(--ink);
+  }
+
+  @media (max-width: 768px) {
+    .nav-link {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
 </style>
