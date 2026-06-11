@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A minimalist blog built with Astro, embracing a retro-web aesthetic with ASCII bracket navigation, classic hyperlinks, and zero JavaScript by default.
+A minimalist blog built with Astro, using a warm paper aesthetic — cream background, serif body text, rust-orange links — with zero JavaScript by default.
 
 ## Development Commands
 
@@ -73,13 +73,14 @@ draft: false
 ## Styling Philosophy
 
 - **Vanilla CSS**: No frameworks, all styles in `src/styles/global.css`
-- **CSS Variables**: Colors, fonts, spacing defined in `:root`
-- **Cyberpunk RPG Aesthetic**: Cyan/pink/gold accents, dark backgrounds, pixel fonts for headings, FF-style dialog boxes
-- **Scoped Styles**: Component-specific styles use Astro's `<style>` blocks
+- **CSS Variables**: Colors, fonts, spacing defined in `:root` (`--paper`, `--ink`, `--accent`, `--rule`, `--panel`, `--code-bg`)
+- **Warm Paper Aesthetic**: Cream background (`#faf6ef`), warm serif body text, rust-orange links (`#b3551d`), single centered reading column (42rem), system fonts only (no web font downloads)
+- **Light theme only**: No dark mode variant
+- **Scoped Styles**: Component-specific styles use Astro's `<style>` blocks; shared list/label/panel classes live in `global.css`
 
 ## Code Block Style Guide
 
-Code blocks use **Shiki** syntax highlighting with the `tokyo-night` theme for readable, high-contrast code on the dark background.
+Code blocks use **Shiki** syntax highlighting with the `gruvbox-dark-medium` theme — code sits in warm dark-brown blocks (`--code-bg: #2a2520`) that contrast with the cream page.
 
 ### Fenced Code Block Rules
 
@@ -101,13 +102,13 @@ Code blocks use **Shiki** syntax highlighting with the `tokyo-night` theme for r
 - Use `text` language hint so diagrams render as plain white text (no syntax coloring)
 - Use a true monospace font for alignment — the CSS uses SF Mono/Monaco/Cascadia Code (`--font-mono`)
 - Ensure consistent line widths: all lines in a box diagram must have the same character count
-- Test diagram alignment in the browser before committing (VT323 and other display fonts break box-drawing alignment)
+- Test diagram alignment in the browser before committing
 
 ### Fonts
 
-- **Code blocks** (`pre`, `pre code`): `--font-mono` (SF Mono, Monaco, Cascadia Code) — true monospace for alignment
-- **Inline code** (`code`): `--font-terminal` (VT323) — retro aesthetic for inline snippets
-- **Headings**: `--font-pixel` (Press Start 2P) — pixel art style
+- **Code blocks** (`pre`, `pre code`): `--font-mono` (SF Mono, Menlo, Cascadia Code) — true monospace for alignment
+- **Inline code** (`code`): `--font-mono` with a light panel-tint background
+- **Headings**: `--font-serif` (Iowan Old Style / Palatino / Georgia) — same family as body text, bold
 
 ## Site Configuration
 
