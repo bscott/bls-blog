@@ -37,7 +37,7 @@ function formatDate(date: Date): string {
 ---
 
 {relatedPosts.length > 0 && (
-  <aside class="further-reading">
+  <aside class="further-reading" aria-label="Further reading">
     <p class="section-label">Further reading</p>
     <ul>
       {relatedPosts.map(post => (
@@ -75,5 +75,13 @@ function formatDate(date: Date): string {
 
   .further-reading a {
     font-size: 0.98rem;
+  }
+
+  @media (max-width: 768px) {
+    .further-reading a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
   }
 </style>

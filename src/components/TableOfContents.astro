@@ -12,7 +12,7 @@ interface Props {
 const { headings } = Astro.props;
 
 // Only h2 and h3 headings
-const tocHeadings = headings.filter(h => h.depth <= 3);
+const tocHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
 ---
 
 {tocHeadings.length > 1 && (
@@ -67,5 +67,13 @@ const tocHeadings = headings.filter(h => h.depth <= 3);
 
   .toc-level-3 {
     padding-left: var(--space-md);
+  }
+
+  @media (max-width: 768px) {
+    .toc a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
   }
 </style>
