@@ -39,10 +39,7 @@ function formatDate(date: Date): string {
           <>
             {' \u00B7 '}
             {tags.map((tag, i) => (
-              <>
-                {i > 0 && ', '}
-                <a href={`/blog/tags/${tag}`} class="tag-link">{tag}</a>
-              </>
+              <>{i > 0 && ', '}<a href={`/blog/tags/${tag}`} class="tag-link">{tag}</a></>
             ))}
           </>
         )}
