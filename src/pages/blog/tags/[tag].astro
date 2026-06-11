@@ -66,4 +66,12 @@ function formatDate(date: Date): string {
   .back-link {
     margin-bottom: var(--space-lg);
   }
+
+  @media (max-width: 768px) {
+    .back-link a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
 </style>

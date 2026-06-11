@@ -285,6 +285,15 @@ img {
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .post-item h2 a,
+  .post-item h3 a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 @media (max-width: 480px) {
   html {
     font-size: 17px;
