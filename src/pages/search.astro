@@ -7,15 +7,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <p class="meta hint">Search posts by title, content, or tags. Results update as you type.</p>
 
   <div class="search-container" id="search"></div>
-</BaseLayout>
 
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
-<script src="/pagefind/pagefind-ui.js" is:inline></script>
-<script is:inline>
-  window.addEventListener('DOMContentLoaded', () => {
-    new PagefindUI({ element: '#search', showSubResults: true });
-  });
-</script>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <script src="/pagefind/pagefind-ui.js" is:inline></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+      new PagefindUI({ element: '#search', showSubResults: true });
+    });
+  </script>
+</BaseLayout>
 
 <style>
   h1 {
