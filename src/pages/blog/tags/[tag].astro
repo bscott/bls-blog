@@ -1,13 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getReadingTime } from '../../../utils/readingTime';
 
 export async function getStaticPaths() {
-  const allPosts = await getCollection('blog', ({ data }) => {
-    return data.draft !== true;
-  });
-
-  // Get all unique tags
+  const allPosts = await getCollection('blog', ({ data }) => data.draft !== true);
   const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))];
 
   return allTags.map(tag => {
@@ -28,7 +25,7 @@ function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
 }
 ---
@@ -37,122 +34,36 @@ function formatDate(date: Date): string {
   title={`Posts tagged "${tag}"`}
   description={`All blog posts tagged with ${tag}`}
 >
-  <div class="tag-header">
-    <h1>Posts tagged: <span class="tag-name">[{tag}]</span></h1>
-    <p>
-      <a href="/blog">[← back to all posts]</a>
-    </p>
-  </div>
+  <h1>Posts tagged &ldquo;{tag}&rdquo;</h1>
+  <p class="back-link meta"><a href="/blog">&larr; All posts</a></p>
 
-  <section class="posts-section">
+  <section>
     {posts.length === 0 ? (
       <p>No posts with this tag yet.</p>
     ) : (
-      <ul class="post-list">
-        {posts.map(post => (
-          <li>
-            <article>
-              <h2>
-                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
-              </h2>
-              <time datetime={post.data.pubDate.toISOString()}>
-                {formatDate(post.data.pubDate)}
-              </time>
-              <p>{post.data.description}</p>
-              {post.data.tags.length > 0 && (
-                <div class="tags">
-                  {post.data.tags.map(t => (
-                    <a href={`/blog/tags/${t}`} class="tag" class:list={[{ active: t === tag }]}>
-                      [{t}]
-                    </a>
-                  ))}
-                </div>
-              )}
-            </article>
-          </li>
-        ))}
-      </ul>
+      posts.map(post => (
+        <article class="post-item">
+          <h2><a href={`/blog/${post.slug}`}>{post.data.title}</a></h2>
+          <p class="post-meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            {' · '}{getReadingTime(post.body)}
+          </p>
+          <p class="post-desc">{post.data.description}</p>
+        </article>
+      ))
     )}
   </section>
 </BaseLayout>
 
 <style>
-  .tag-header {
-    margin-bottom: var(--space-xl);
+  h1 {
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xs);
   }
 
-  .tag-header h1 {
-    margin-top: 0;
-    margin-bottom: var(--space-sm);
-  }
-
-  .tag-name {
-    font-family: var(--font-mono);
-    color: var(--color-link);
-  }
-
-  .tag-header p {
-    margin-bottom: 0;
-  }
-
-  .post-list {
-    list-style: none;
-    padding-left: 0;
-  }
-
-  .post-list li {
-    margin-bottom: var(--space-xl);
-  }
-
-  .post-list article {
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-lg);
-  }
-
-  .post-list h2 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-size: var(--text-xl);
-  }
-
-  .post-list time {
-    display: block;
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .post-list p {
-    margin-bottom: var(--space-sm);
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: var(--space-sm);
-  }
-
-  .tag {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--color-text);
-    text-decoration: none;
-    background-color: var(--color-code-bg);
-    padding: 0.2em 0.5em;
-    border-radius: 3px;
-  }
-
-  .tag:hover {
-    text-decoration: underline;
-  }
-
-  .tag:visited {
-    color: var(--color-text);
-  }
-
-  .tag.active {
-    background-color: var(--color-text);
-    color: var(--color-bg);
+  .back-link {
+    margin-bottom: var(--space-lg);
   }
 </style>

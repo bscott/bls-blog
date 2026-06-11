@@ -2,16 +2,11 @@
 import type { GetStaticPaths, Page } from 'astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getReadingTime } from '../../utils/readingTime';
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
-  // Get all blog posts, filter out drafts, sort by date
-  const allPosts = await getCollection('blog', ({ data }) => {
-    return data.draft !== true;
-  });
-
+  const allPosts = await getCollection('blog', ({ data }) => data.draft !== true);
   const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-  // Generate paginated pages (10 posts per page)
   return paginate(posts, { pageSize: 10 });
 };
 
@@ -21,283 +16,100 @@ interface Props {
 
 const { page } = Astro.props;
 
-// Get all unique tags from ALL posts (not just current page)
-const allPosts = await getCollection('blog', ({ data }) => {
-  return data.draft !== true;
-});
+const allPosts = await getCollection('blog', ({ data }) => data.draft !== true);
 const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
 }
 ---
 
 <BaseLayout
-  title={page.currentPage === 1 ? "Blog" : `Blog - Page ${page.currentPage}`}
+  title={page.currentPage === 1 ? 'Blog' : `Blog - Page ${page.currentPage}`}
   description="All blog posts"
 >
   <h1>Blog</h1>
 
   {allTags.length > 0 && (
-    <section class="tags-section">
-      <h2>Filter by tag:</h2>
-      <div class="tag-list">
-        {allTags.map(tag => (
-          <a href={`/blog/tags/${tag}`} class="tag">[{tag}]</a>
-        ))}
-      </div>
-    </section>
+    <p class="tag-browse meta">
+      Browse by tag:{' '}
+      {allTags.map((tag, i) => (
+        <>{i > 0 && ', '}<a href={`/blog/tags/${tag}`}>{tag}</a></>
+      ))}
+    </p>
   )}
 
-  <section class="posts-section">
+  <section>
     {page.data.length === 0 ? (
-      <p>No posts yet. Check back soon!</p>
+      <p>No posts yet. Check back soon.</p>
     ) : (
-      <ul class="post-list">
-        {page.data.map((post: any) => (
-          <li>
-            <article>
-              <h2>
-                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
-              </h2>
-              <time datetime={post.data.pubDate.toISOString()}>
-                {formatDate(post.data.pubDate)}
-              </time>
-              <p>{post.data.description}</p>
-              {post.data.tags.length > 0 && (
-                <div class="tags">
-                  {post.data.tags.map((tag: string) => (
-                    <a href={`/blog/tags/${tag}`} class="tag">[{tag}]</a>
-                  ))}
-                </div>
-              )}
-            </article>
-          </li>
-        ))}
-      </ul>
+      page.data.map((post: any) => (
+        <article class="post-item">
+          <h2><a href={`/blog/${post.slug}`}>{post.data.title}</a></h2>
+          <p class="post-meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            {' · '}{getReadingTime(post.body)}
+          </p>
+          <p class="post-desc">{post.data.description}</p>
+        </article>
+      ))
     )}
   </section>
 
-  {/* Pagination Navigation */}
   {page.lastPage > 1 && (
     <nav class="pagination" aria-label="Blog pagination">
-      <div class="pagination-links">
-        {page.url.prev ? (
-          <a href={page.url.prev} class="pagination-link">[&larr; Newer]</a>
-        ) : (
-          <span class="pagination-link disabled">[&larr; Newer]</span>
-        )}
-
-        <span class="pagination-info">Page {page.currentPage} of {page.lastPage}</span>
-
-        {page.url.next ? (
-          <a href={page.url.next} class="pagination-link">[Older &rarr;]</a>
-        ) : (
-          <span class="pagination-link disabled">[Older &rarr;]</span>
-        )}
-      </div>
+      {page.url.prev ? (
+        <a href={page.url.prev}>&larr; Newer</a>
+      ) : (
+        <span class="disabled">&larr; Newer</span>
+      )}
+      <span class="meta">Page {page.currentPage} of {page.lastPage}</span>
+      {page.url.next ? (
+        <a href={page.url.next}>Older &rarr;</a>
+      ) : (
+        <span class="disabled">Older &rarr;</span>
+      )}
     </nav>
   )}
 </BaseLayout>
 
 <style>
   h1 {
-    margin-top: 0;
+    margin-top: var(--space-md);
   }
 
-  .tags-section {
-    margin-bottom: var(--space-xl);
-    padding: var(--space-md);
-    background-color: var(--color-code-bg);
-    border-left: 3px solid var(--color-border);
+  .tag-browse {
+    margin-bottom: var(--space-lg);
   }
 
-  .tags-section h2 {
-    font-size: var(--text-base);
-    margin-top: 0;
-    margin-bottom: var(--space-sm);
-  }
-
-  .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--color-text);
-    text-decoration: none;
-    background-color: var(--color-bg);
-    padding: 0.2em 0.5em;
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
-  }
-
-  .tag:hover {
-    text-decoration: underline;
-  }
-
-  .tag:visited {
-    color: var(--color-text);
-  }
-
-  .post-list {
-    list-style: none;
-    padding-left: 0;
-  }
-
-  .post-list li {
-    margin-bottom: var(--space-xl);
-  }
-
-  .post-list article {
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-lg);
-  }
-
-  .post-list h2 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-size: var(--text-xl);
-  }
-
-  .post-list time {
-    display: block;
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .post-list p {
-    margin-bottom: var(--space-sm);
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: var(--space-sm);
-  }
-
-  /* Pagination Styles */
   .pagination {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--color-border);
-  }
-
-  .pagination-links {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
   }
 
-  .pagination-link {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    text-decoration: none;
+  .pagination .disabled {
+    color: var(--ink-muted);
   }
 
-  .pagination-link:hover {
-    text-decoration: underline;
-  }
-
-  .pagination-link.disabled {
-    color: var(--color-text-muted);
-  }
-
-  .pagination-info {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-  }
-
-  /* Tablet breakpoint */
   @media (max-width: 768px) {
-    .pagination-links {
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-
-    /* Ensure touch targets for tags */
-    .tag {
-      padding: 10px 14px;
-      min-height: 44px;
+    .pagination a,
+    .tag-browse a {
       display: inline-flex;
       align-items: center;
-    }
-
-    .tag-list,
-    .tags {
-      gap: 10px;
-    }
-
-    /* Ensure touch targets for pagination links */
-    .pagination-link {
-      padding: 10px 16px;
       min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-    }
-  }
-
-  /* Mobile breakpoint */
-  @media (max-width: 480px) {
-    h1 {
-      font-size: 0.875rem;
-    }
-
-    .tags-section {
-      padding: var(--space-sm);
-      margin-bottom: var(--space-lg);
-    }
-
-    .tags-section h2 {
-      font-size: 0.875rem;
-    }
-
-    .post-list h2 {
-      font-size: 1rem;
-    }
-
-    /* Ensure readable body text (minimum 16px) */
-    .post-list p {
-      font-size: 1rem;
-    }
-
-    .post-list time {
-      font-size: 0.85rem;
-    }
-
-    .post-list article {
-      padding-bottom: var(--space-md);
-    }
-
-    .post-list li {
-      margin-bottom: var(--space-lg);
-    }
-
-    /* Tags - smaller font but adequate touch target */
-    .tag {
-      font-size: 0.75rem;
-      padding: 12px 14px;
-    }
-
-    .pagination {
-      margin-top: var(--space-lg);
-      padding-top: var(--space-md);
-    }
-
-    .pagination-link,
-    .pagination-info {
-      font-size: 0.8rem;
     }
   }
 </style>
