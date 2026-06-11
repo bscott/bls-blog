@@ -42,7 +42,7 @@ Two-tier layout system:
 ### Routing Structure
 
 - `src/pages/index.astro` - Homepage (shows 5 recent posts)
-- `src/pages/blog/index.astro` - All posts listing with tag filters
+- `src/pages/blog/[...page].astro` - Paginated all-posts listing with tag browse line
 - `src/pages/blog/[slug].astro` - Dynamic blog post pages (uses `getStaticPaths()`)
 - `src/pages/blog/tags/[tag].astro` - Tag filter pages (dynamic routes for each tag)
 - `src/pages/about.astro` - Static about page
@@ -68,7 +68,7 @@ draft: false
 
 **Reading Time**: Calculated by `src/utils/readingTime.ts` which strips frontmatter, code blocks, and markdown syntax before counting words (assumes 200 WPM)
 
-**Table of Contents**: `src/components/TableOfContents.astro` receives headings from `post.render()` and displays h2/h3 anchors in ASCII bracket style
+**Table of Contents**: `src/components/TableOfContents.astro` receives headings from `post.render()` and displays h2/h3 anchors in an inline Contents panel (renders only when a post has 2+ headings)
 
 ## Styling Philosophy
 
@@ -119,7 +119,7 @@ site: 'https://yourdomain.com'
 
 Update site title in `src/layouts/BaseLayout.astro`:
 ```typescript
-const siteTitle = 'bscott blog';
+const siteTitle = 'Brian Scott';
 ```
 
 ## Content Collections Schema
