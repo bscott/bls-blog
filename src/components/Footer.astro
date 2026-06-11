@@ -1,162 +1,54 @@
 ---
-// Footer component with RPG save point styling
 const currentYear = new Date().getFullYear();
 ---
 
 <footer>
-  <div class="save-point">
-    <div class="save-icon"></div>
-    <span class="save-text">PROGRESS SAVED</span>
-  </div>
-
-  <nav class="footer-links">
-    <a href="https://bsky.app/profile/bscott.social" class="footer-link">[BLUESKY]</a>
-    <a href="https://hachyderm.io/@bscott" class="footer-link">[MASTODON]</a>
-    <a href="https://linkedin.com/in/brianlscott/" class="footer-link">[LINKEDIN]</a>
-    <a href="/rss.xml" class="footer-link">[RSS]</a>
+  <nav class="footer-links" aria-label="Social links">
+    <a href="https://bsky.app/profile/bscott.social">Bluesky</a>
+    <a href="https://hachyderm.io/@bscott">Mastodon</a>
+    <a href="https://linkedin.com/in/brianlscott/">LinkedIn</a>
+    <a href="/rss.xml">RSS</a>
   </nav>
-
-  <p class="copyright">
-    &copy; {currentYear} BRIAN SCOTT <span class="cursor">_</span>
-  </p>
+  <p class="copyright">&copy; {currentYear} Brian Scott</p>
 </footer>
 
 <style>
   footer {
     margin-top: var(--space-xl);
-    padding: var(--space-lg) 0;
-    border-top: 1px solid var(--color-border);
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--rule);
     text-align: center;
-  }
-
-  .save-point {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-code-bg);
-    border: 1px solid var(--color-border);
-    margin-bottom: var(--space-md);
-  }
-
-  .save-icon {
-    width: 20px;
-    height: 20px;
-    background: var(--color-link);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    animation: save-pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes save-pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.1);
-      opacity: 0.7;
-    }
-  }
-
-  .save-text {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    letter-spacing: 1px;
+    font-family: var(--font-sans);
   }
 
   .footer-links {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: var(--space-md);
-    margin-bottom: var(--space-md);
+    gap: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-xs);
   }
 
-  .footer-link {
-    font-family: var(--font-mono);
+  .footer-links a {
     font-size: 0.8rem;
-    color: var(--color-text-muted);
+    color: var(--ink-muted);
     text-decoration: none;
-    transition: color 0.2s;
+    padding: 0.4rem 0;
   }
 
-  .footer-link:hover {
-    color: var(--color-link);
+  .footer-links a:visited {
+    color: var(--ink-muted);
   }
 
-  .footer-link:visited {
-    color: var(--color-text-muted);
+  .footer-links a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .copyright {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    color: var(--ink-muted);
     margin-bottom: 0;
-  }
-
-  .cursor {
-    display: inline-block;
-    animation: blink 1s steps(2) infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
-
-  /* Tablet breakpoint */
-  @media (max-width: 768px) {
-    .footer-links {
-      gap: var(--space-sm);
-      flex-wrap: wrap;
-    }
-
-    /* Ensure 44px touch targets */
-    .footer-link {
-      font-size: 0.7rem;
-      padding: 10px 12px;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-    }
-  }
-
-  /* Mobile breakpoint */
-  @media (max-width: 480px) {
-    footer {
-      padding: var(--space-md) 0;
-    }
-
-    .save-point {
-      padding: var(--space-xs) var(--space-sm);
-    }
-
-    .save-icon {
-      width: 16px;
-      height: 16px;
-    }
-
-    .save-text {
-      font-size: 0.6rem;
-    }
-
-    .footer-links {
-      gap: var(--space-xs);
-    }
-
-    .footer-link {
-      font-size: 0.6rem;
-      padding: 12px 10px;
-    }
-
-    .copyright {
-      font-size: 0.6rem;
-    }
   }
 </style>
