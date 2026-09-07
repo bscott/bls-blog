@@ -23,7 +23,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <li><a href="https://hachyderm.io/@bscott">Mastodon</a></li>
     <li><a href="https://linkedin.com/in/brianlscott/">LinkedIn</a></li>
     <li><a href="/rss.xml">RSS feed</a></li>
-    <li class="email">Email: brian<span class="ob">[at]</span>byte-mail<span class="ob">[dot]</span>xyz</li>
+    <li class="email">
+      Email:
+      <span id="email-contact" aria-live="polite">
+        <button type="button" id="email-link" class="email-link" hidden>Reveal email address</button>
+      </span>
+      <noscript>Enable JavaScript to reveal the email address.</noscript>
+    </li>
   </ul>
 
   <h2>About this site</h2>
@@ -31,7 +37,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     This blog is built with <a href="https://astro.build">Astro</a>, a modern
     static site generator that prioritizes performance and developer
     experience. It uses vanilla CSS, system fonts (zero downloads), Markdown
-    content collections, and ships no JavaScript by default.
+    content collections, and ships almost no JavaScript. The contact link above
+    is assembled in the browser to reduce basic email-address harvesting.
   </p>
 
   <p class="disclaimer">
@@ -45,10 +52,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin-top: var(--space-md);
   }
 
-  .email .ob {
-    font-family: var(--font-sans);
-    font-size: 0.8em;
-    color: var(--ink-muted);
+  .email-link {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    cursor: pointer;
+  }
+
+  .email-link:hover,
+  .email-link:focus-visible {
+    color: var(--ink);
   }
 
   .disclaimer {
@@ -60,3 +78,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     color: var(--ink-muted);
   }
 </style>
+
+<script is:inline>
+  const trigger = document.querySelector('#email-link');
+  const contact = document.querySelector('#email-contact');
+
+  if (trigger instanceof HTMLButtonElement) {
+    trigger.hidden = false;
+  }
+
+  trigger?.addEventListener('click', () => {
+    const address = [98,114,105,97,110,64,98,115,99,111,116,116,46,100,101,118]
+      .map((code) => String.fromCharCode(code))
+      .join('');
+    const link = document.createElement('a');
+    link.href = `mailto:${address}`;
+    link.textContent = address;
+    contact?.replaceChildren(link);
+  }, { once: true });
+</script>
