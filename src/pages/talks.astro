@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Talks"
+  description="Previous talks and presentations by Brian Scott on engineering, reliability, and building technology at scale."
+>
+  <h1>Talks</h1>
+  <p class="intro">Stories and lessons from building reliable systems and teams.</p>
+
+  <section aria-labelledby="previous-talks">
+    <h2 id="previous-talks" class="section-label">Previous talks</h2>
+
+    <article aria-labelledby="disney-global-sre">
+      <h3 id="disney-global-sre">Disney Global SRE &mdash; Creating Digital Magic</h3>
+      <p class="post-meta">DevOps Enterprise Summit Europe &middot; <time datetime="2022">2022</time></p>
+      <p>
+        From my time at The Walt Disney Company: a look at scaling our Global SRE
+        practice, fostering communities of practice, and building the technology
+        and automation behind digital guest experiences.
+      </p>
+      <p class="speakers">Presented with Alexi Varanko and Jason Cox.</p>
+
+      <figure>
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/BqYH3aCxLA4"
+          title="Disney Global SRE — Creating Digital Magic, with Brian Scott, Alexi Varanko, and Jason Cox"
+          width="640"
+          height="360"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+        <figcaption>
+          A 7-minute excerpt, published by IT Revolution on
+          <time datetime="2022-07-07">July 7, 2022</time>.
+        </figcaption>
+      </figure>
+
+      <p class="talk-links">
+        <a href="https://www.youtube.com/watch?v=BqYH3aCxLA4">Watch on YouTube</a>
+        <span aria-hidden="true"> &middot; </span>
+        <a href="https://videos.itrevolution.com/watch/709121287/">Full talk (31 minutes; free account required)</a>
+      </p>
+    </article>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: var(--space-lg);
+  }
+
+  article {
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-md);
+  }
+
+  article h3 {
+    font-size: 1.35rem;
+    margin: 0 0 var(--space-xs);
+  }
+
+  .speakers {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  iframe {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--panel);
+  }
+
+  figcaption,
+  .talk-links {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    margin-top: var(--space-xs);
+  }
+
+  .talk-links {
+    margin-top: var(--space-sm);
+  }
+</style>
