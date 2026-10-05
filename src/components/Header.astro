@@ -3,6 +3,7 @@ const currentPath = Astro.url.pathname;
 
 const navItems = [
   { href: '/blog', label: 'Blog' },
+  { href: '/talks', label: 'Talks' },
   { href: '/about', label: 'About' },
   { href: '/search', label: 'Search' },
   { href: '/rss.xml', label: 'RSS' },
@@ -52,6 +53,7 @@ const navItems = [
 
   .site-nav {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-sm);
   }
 
