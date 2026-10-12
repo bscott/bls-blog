@@ -38,6 +38,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:description" content={description} />
 
     <title>{fullTitle}</title>
+
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script is:inline async src="https://plausible-g7wifsiqs68sxolu35cjlik7.apps.bytecove.dev/js/pa-K3IgH5yQRnxtpMgtDD2Lw.js"></script>
+    <script is:inline>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
   </head>
   <body>
     <Header />
